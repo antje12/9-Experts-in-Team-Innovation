@@ -31,3 +31,5 @@ C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\obj\Debu
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\obj\Debug\net7.0\api.pdb
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\obj\Debug\net7.0\api.genruntimeconfig.cache
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\obj\Debug\net7.0\ref\api.dll
+C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\bin\Debug\net7.0\Interfaces.dll
+C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\api\bin\Debug\net7.0\Interfaces.pdb

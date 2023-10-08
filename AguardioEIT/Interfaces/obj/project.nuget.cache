@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "Ie4h512MsNXJ7lPlzy/0uba3W5HFvog0DSUNUcI4Z3Ytbe65xsT7T0Zp5sY3LuYNCFyUNXp6IfHppYTKImzovA==",
+  "dgSpecHash": "vKUZTMZxTBzUmWZAAp2URs+gRQbGqYFHf1omDCvz1u4yO/FRyOBUcsnCoa6h28ibgIRv3d7VqOxawbetMezNyA==",
   "success": true,
   "projectFilePath": "C:\\Users\\nicol\\Desktop\\git\\9-Experts-in-Team-Innovation\\AguardioEIT\\Interfaces\\Interfaces.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\nicol\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\2.2.0\\microsoft.extensions.dependencyinjection.abstractions.2.2.0.nupkg.sha512"
+  ],
   "logs": []
 }

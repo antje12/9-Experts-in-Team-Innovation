@@ -10,3 +10,6 @@ C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\obj\D
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\obj\Debug\net7.0\refint\Plugin.dll
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\obj\Debug\net7.0\Plugin.pdb
 C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\obj\Debug\net7.0\ref\Plugin.dll
+C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\bin\Debug\net7.0\Interfaces.dll
+C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\bin\Debug\net7.0\Interfaces.pdb
+C:\Users\nicol\Desktop\git\9-Experts-in-Team-Innovation\AguardioEIT\Plugin\obj\Debug\net7.0\Plugin.csproj.CopyComplete
