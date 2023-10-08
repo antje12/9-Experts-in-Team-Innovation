@@ -20,5 +20,17 @@ namespace Plugin
         {
             return $"Plugin Controller v 1.0 {ps.Test()}";
         }
+
+        [HttpGet("Produce")]
+        public object Produce()
+        {
+            return $"Plugin Controller v 1.0 {ps.Produce()}";
+        }
+
+        [HttpGet("Consume")]
+        public object Consume()
+        {
+            return $"Plugin Controller v 1.0 {ps.Consume()}";
+        }
     }
 }

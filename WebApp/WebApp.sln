@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin", "Plugin\Plugin.csproj", "{713D0A33-2441-418D-809D-DCD0418849E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{55F82FB1-028E-4039-AFB6-3BD5F8475FA2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{713D0A33-2441-418D-809D-DCD0418849E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{713D0A33-2441-418D-809D-DCD0418849E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{713D0A33-2441-418D-809D-DCD0418849E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55F82FB1-028E-4039-AFB6-3BD5F8475FA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55F82FB1-028E-4039-AFB6-3BD5F8475FA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55F82FB1-028E-4039-AFB6-3BD5F8475FA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55F82FB1-028E-4039-AFB6-3BD5F8475FA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

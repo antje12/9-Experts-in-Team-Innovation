@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "jT8kX9buTeKzaIPEM/9whgDCFCwXUXVTshHo2ZTs8/rZm4r/RnkfQ3rLZahPnuPz9r01s+qBJjVXuOTjKVi+Sg==",
+  "dgSpecHash": "IfLdueSZTqxcPwxkYuD/ppTel+6c3zuQMjPXlY0Xz3pFsJPQRNep4JNUiHxKhMh0h5F3/eANm8D9edRcJiHWjA==",
   "success": true,
   "projectFilePath": "D:\\Git\\9-Experts-in-Team-Innovation\\WebApp\\WebApp\\WebApp.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Anton\\.nuget\\packages\\confluent.kafka\\2.2.0\\confluent.kafka.2.2.0.nupkg.sha512",
+    "C:\\Users\\Anton\\.nuget\\packages\\librdkafka.redist\\2.2.0\\librdkafka.redist.2.2.0.nupkg.sha512",
     "C:\\Users\\Anton\\.nuget\\packages\\microsoft.aspnetcore.antiforgery\\2.2.0\\microsoft.aspnetcore.antiforgery.2.2.0.nupkg.sha512",
     "C:\\Users\\Anton\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\Anton\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",

@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "ZkYyvgu99VIwmID4r8uA0/oJTyhdpyoFrxc3Lpea8S02LO2VsrFIqAW3Wre7iNI6zwlurfM1ee//Or6hsd4H+Q==",
+  "success": true,
+  "projectFilePath": "D:\\Git\\9-Experts-in-Team-Innovation\\WebApp\\ConsoleApp\\ConsoleApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Anton\\.nuget\\packages\\confluent.kafka\\2.2.0\\confluent.kafka.2.2.0.nupkg.sha512",
+    "C:\\Users\\Anton\\.nuget\\packages\\librdkafka.redist\\2.2.0\\librdkafka.redist.2.2.0.nupkg.sha512",
+    "C:\\Users\\Anton\\.nuget\\packages\\system.memory\\4.5.0\\system.memory.4.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
