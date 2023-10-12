@@ -10,11 +10,14 @@ services:
         - ./HDFS/config
       environment:
           ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+      
    datanode:
       image: apache/hadoop:3
       command: ["hdfs", "datanode"]
       env_file:
-        - ./HDFS/config      
+        - ./HDFS/config
+      volumes:
+        - ./datanode_data:/hadoop/dfs/data
    resourcemanager:
       image: apache/hadoop:3
       hostname: resourcemanager
