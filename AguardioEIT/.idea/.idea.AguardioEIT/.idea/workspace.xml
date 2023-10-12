@@ -10,160 +10,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1af56665-5eb1-487f-9d95-1cf7cfc464e8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.9-Experts-in-Team-Innovation.dir/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.9-Experts-in-Team-Innovation.dir/.idea/indexLayout.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/.idea.9-Experts-in-Team-Innovation.dir/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AguardioEIT/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/AguardioEIT.sln" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/IApplicationService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/IPlugin.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/IPlugin2Service.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/IPluginService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/Interfaces.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/ref/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/refint/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Interfaces.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Interfaces.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Interfaces.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/Plugin.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/Plugin.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/PluginController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/PluginService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.CopyComplete" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/ref/Plugin.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/refint/Plugin.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Plugin.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Plugin.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Plugin.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/Plugin2.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/Plugin2.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/Plugin2Service.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/bin/Debug/net7.0/Plugin2.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/bin/Debug/net7.0/Plugin2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/bin/Debug/net7.0/Plugin2.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.csproj.CopyComplete" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/ref/Plugin2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/refint/Plugin2.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Plugin2.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Plugin2.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Plugin2.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin2/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Configuration/PluginConfiguration.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Configuration/ServicePluginExtension.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Controllers/PublicController.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Dockerfile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Program.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Properties/launchSettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Service/ApplicationService.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api.csproj" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Microsoft.AspNetCore.OpenApi.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Microsoft.OpenApi.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Swashbuckle.AspNetCore.Swagger.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Swashbuckle.AspNetCore.SwaggerGen.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Swashbuckle.AspNetCore.SwaggerUI.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.deps.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.runtimeconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/appsettings.Development.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/appsettings.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.AssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.AssemblyInfoInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.GlobalUsings.g.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.MvcApplicationPartsAssemblyInfo.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.MvcApplicationPartsAssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.RazorAssemblyInfo.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.RazorAssemblyInfo.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.assets.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.AssemblyReference.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.CopyComplete" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.CoreCompileInputs.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.FileListAbsolute.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.genruntimeconfig.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.pdb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/apphost.exe" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/ref/api.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/refint/api.dll" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/staticwebassets.build.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/staticwebassets/msbuild.build.api.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/staticwebassets/msbuild.buildMultiTargeting.api.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/staticwebassets/msbuild.buildTransitive.api.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/api.csproj.nuget.dgspec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/api.csproj.nuget.g.props" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/api.csproj.nuget.g.targets" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/project.assets.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/project.nuget.cache" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/project.packagespec.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/rider.project.model.nuget.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/rider.project.restore.info" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.AguardioEIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AguardioEIT/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin2/obj/Debug/net7.0/Plugin2.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.pdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -287,7 +146,7 @@
       <option name="presentableId" value="Default" />
       <updated>1696775971275</updated>
       <workItem from="1696775972553" duration="13183000" />
-      <workItem from="1697098424149" duration="354000" />
+      <workItem from="1697098424149" duration="2994000" />
     </task>
     <servers />
   </component>
