@@ -8,11 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugin2", "Plugin2\Plugin2.csproj", "{B15C6542-8CC2-42A8-BC7F-58D9ED2F2F9F}"
 EndProject
-<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HDFS_Plugin", "HDFS_Plugin\HDFS_Plugin.csproj", "{9B70C8BC-0C7C-4FF6-857C-B90BCCCEBA51}"
-=======
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaPlugin", "KafkaPlugin\KafkaPlugin.csproj", "{98D45802-DB8E-4D5C-B752-31272F0094DC}"
->>>>>>> 7218358ea74918500d7ad035e61b0f505ffeff18
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,16 +33,13 @@ Global
 		{B15C6542-8CC2-42A8-BC7F-58D9ED2F2F9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B15C6542-8CC2-42A8-BC7F-58D9ED2F2F9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B15C6542-8CC2-42A8-BC7F-58D9ED2F2F9F}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
 		{9B70C8BC-0C7C-4FF6-857C-B90BCCCEBA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B70C8BC-0C7C-4FF6-857C-B90BCCCEBA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B70C8BC-0C7C-4FF6-857C-B90BCCCEBA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B70C8BC-0C7C-4FF6-857C-B90BCCCEBA51}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
 		{98D45802-DB8E-4D5C-B752-31272F0094DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{98D45802-DB8E-4D5C-B752-31272F0094DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{98D45802-DB8E-4D5C-B752-31272F0094DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{98D45802-DB8E-4D5C-B752-31272F0094DC}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> 7218358ea74918500d7ad035e61b0f505ffeff18
 	EndGlobalSection
 EndGlobal
