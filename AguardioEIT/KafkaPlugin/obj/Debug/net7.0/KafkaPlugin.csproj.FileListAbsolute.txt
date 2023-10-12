@@ -1,0 +1,15 @@
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\bin\Debug\net7.0\KafkaPlugin.deps.json
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\bin\Debug\net7.0\KafkaPlugin.dll
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\bin\Debug\net7.0\KafkaPlugin.pdb
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\bin\Debug\net7.0\Interfaces.dll
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\bin\Debug\net7.0\Interfaces.pdb
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.csproj.AssemblyReference.cache
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.GeneratedMSBuildEditorConfig.editorconfig
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.AssemblyInfoInputs.cache
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.AssemblyInfo.cs
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.csproj.CoreCompileInputs.cache
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.csproj.CopyComplete
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.dll
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\refint\KafkaPlugin.dll
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\KafkaPlugin.pdb
+D:\Git\9-Experts-in-Team-Innovation\AguardioEIT\KafkaPlugin\obj\Debug\net7.0\ref\KafkaPlugin.dll
