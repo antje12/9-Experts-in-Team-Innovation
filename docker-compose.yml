@@ -1,7 +1,7 @@
 version: "3"
 services:
   namenode:
-    restart: unless-stopped
+    #restart: unless-stopped
     image: apache/hadoop:3
     hostname: namenode
     command: ["hdfs", "namenode"]
@@ -13,15 +13,16 @@ services:
         ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
     
   datanode:
-    restart: unless-stopped
+    #restart: unless-stopped
     image: apache/hadoop:3
     command: ["hdfs", "datanode"]
     env_file:
       - ./HDFS/config
     volumes:
       - ./datanode_data:/hadoop/dfs/data
+  
   resourcemanager:
-    restart: unless-stopped
+    #restart: unless-stopped
     image: apache/hadoop:3
     hostname: resourcemanager
     command: ["yarn", "resourcemanager"]
@@ -33,25 +34,26 @@ services:
       - ./test.sh:/opt/test.sh
 
   nodemanager:
-    restart: unless-stopped
+    #restart: unless-stopped
     image: apache/hadoop:3
     command: ["yarn", "nodemanager"]
     env_file:
       - ./HDFS/config
 
   hive-server:
-    restart: unless-stopped
+    #restart: unless-stopped
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
       - ./HDFS/hadoop-hive.env
     depends_on:
       - hive-metastore
+      - namenode
+      - datanode
     environment:
-      #HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:mysql://hive-metastore/metastore"
       SERVICE_PRECONDITION: "hive-metastore:9083"
+      HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
 
   hive-metastore:
-    restart: unless-stopped
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
       - ./HDFS/hadoop-hive.env
@@ -59,20 +61,26 @@ services:
       - hive-metastore-db
     command: /opt/hive/bin/hive --service metastore
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:3306"
+      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
     ports:
-      - "9083:9083" 
+      - "9083:9083"
 
   hive-metastore-db:
-    restart: unless-stopped
-    image: mysql:latest
+    #restart: unless-stopped
+    build: 
+      context: ./HIVE
+      dockerfile: Dockerfile
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: metastore
-      MYSQL_USER: hive
-      MYSQL_PASSWORD: hive
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
   redis-server:
     image: redis/redis-stack-server:latest
     ports:
       - 6379:6379
+
+volumes:
+  postgres_data:
