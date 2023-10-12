@@ -7,7 +7,8 @@ public sealed partial class RedisPluginService : IRedisPluginService
 {
     private readonly ConnectionMultiplexer _redis;
     private readonly IDatabase _db;
-    private const int SlidingExpirationSeconds = 3600;
+    // Set to 30 minutes, because that's the update interval for the sensors
+    private const int SlidingExpirationSeconds = 30 * 60; 
         
     public RedisPluginService()
     {

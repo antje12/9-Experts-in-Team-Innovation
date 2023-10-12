@@ -29,7 +29,7 @@ public class RedisPluginController : ControllerBase
     }
     
     [HttpGet]
-    public async Task<ActionResult<GetCacheResultDto>> Get(GetCacheRequestDto request)
+    public async Task<ActionResult<GetCacheResultDto>> Get([FromQuery] GetCacheRequestDto request)
     {
         try
         {
