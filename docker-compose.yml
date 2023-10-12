@@ -33,3 +33,18 @@ services:
       command: ["yarn", "nodemanager"]
       env_file:
         - ./HDFS/config
+
+   hive-server:
+      image: bde2020/hive:2.3.2-postgresql-metastore
+      env_file:
+        - ./HDFS/hadoop-hive.env
+      depends_on:
+        - hive-metastore
+
+   hive-metastore:
+      image: mysql:5.7
+      environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: metastore
+        MYSQL_USER: hive
+        MYSQL_PASSWORD: hive
