@@ -7,6 +7,7 @@ public class Kafka : IPlugin
 {
     public void Initialize(IServiceCollection services)
     {
-        services.AddSingleton<KafkaService>();
+        services.AddSingleton<IKafkaPluginService, KafkaService>();
+
     }
 }
