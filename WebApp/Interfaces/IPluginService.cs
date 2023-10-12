@@ -3,7 +3,9 @@
     public interface IPluginService
     {
         string Test();
+        string Status();
         string Produce();
-        string Consume();
+        string ConsumeStart();
+        string ConsumeStop();
     }
 }

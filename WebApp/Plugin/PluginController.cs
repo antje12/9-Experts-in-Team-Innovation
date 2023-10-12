@@ -21,16 +21,28 @@ namespace Plugin
             return $"Plugin Controller v 1.0 {ps.Test()}";
         }
 
+        [HttpGet("Status")]
+        public object Status()
+        {
+            return $"Plugin Controller v 1.0 {ps.Status()}";
+        }
+
         [HttpGet("Produce")]
         public object Produce()
         {
             return $"Plugin Controller v 1.0 {ps.Produce()}";
         }
 
-        [HttpGet("Consume")]
-        public object Consume()
+        [HttpGet("ConsumeStart")]
+        public object ConsumeStart()
         {
-            return $"Plugin Controller v 1.0 {ps.Consume()}";
+            return $"Plugin Controller v 1.0 {ps.ConsumeStart()}";
+        }
+
+        [HttpGet("ConsumeStop")]
+        public object ConsumeStop()
+        {
+            return $"Plugin Controller v 1.0 {ps.ConsumeStop()}";
         }
     }
 }
