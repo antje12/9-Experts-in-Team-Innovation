@@ -1,6 +1,7 @@
 version: "3"
 services:
    namenode:
+      restart: unless-stopped
       image: apache/hadoop:3
       hostname: namenode
       command: ["hdfs", "namenode"]
@@ -12,6 +13,7 @@ services:
           ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
       
    datanode:
+      restart: unless-stopped
       image: apache/hadoop:3
       command: ["hdfs", "datanode"]
       env_file:
@@ -19,6 +21,7 @@ services:
       volumes:
         - ./datanode_data:/hadoop/dfs/data
    resourcemanager:
+      restart: unless-stopped
       image: apache/hadoop:3
       hostname: resourcemanager
       command: ["yarn", "resourcemanager"]
@@ -28,21 +31,42 @@ services:
         - ./HDFS/config
       volumes:
         - ./test.sh:/opt/test.sh
+
    nodemanager:
+      restart: unless-stopped
       image: apache/hadoop:3
       command: ["yarn", "nodemanager"]
       env_file:
         - ./HDFS/config
 
    hive-server:
+      restart: unless-stopped
       image: bde2020/hive:2.3.2-postgresql-metastore
       env_file:
         - ./HDFS/hadoop-hive.env
       depends_on:
         - hive-metastore
+      environment:
+        #HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:mysql://hive-metastore/metastore"
+        SERVICE_PRECONDITION: "hive-metastore:9083"
 
    hive-metastore:
-      image: mysql:5.7
+      restart: unless-stopped
+      image: bde2020/hive:2.3.2-postgresql-metastore
+      env_file:
+        - ./HDFS/hadoop-hive.env
+      depends_on:
+        - hive-metastore-db
+      command: /opt/hive/bin/hive --service metastore
+      environment:
+        SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:3306"
+      ports:
+        - "9083:9083" 
+
+
+   hive-metastore-db:
+      restart: unless-stopped
+      image: mysql:latest
       environment:
         MYSQL_ROOT_PASSWORD: root
         MYSQL_DATABASE: metastore
