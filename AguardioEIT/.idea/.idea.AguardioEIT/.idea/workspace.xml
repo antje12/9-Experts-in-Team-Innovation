@@ -9,46 +9,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1af56665-5eb1-487f-9d95-1cf7cfc464e8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Interfaces/IPlugin2Service.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Plugin2/Plugin2.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/Configuration/PluginConfiguration.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/api/Configuration/ServicePluginExtension.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.AguardioEIT/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AguardioEIT/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AguardioEIT.sln" beforeDir="false" afterPath="$PROJECT_DIR$/AguardioEIT.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/bin/Debug/net7.0/Interfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/Interfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/ref/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/ref/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/refint/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Interfaces/obj/Debug/net7.0/refint/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/PluginController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/PluginController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Interfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/bin/Debug/net7.0/Plugin.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/Plugin.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/ref/Plugin.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/ref/Plugin.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/refint/Plugin.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Plugin/obj/Debug/net7.0/refint/Plugin.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/api/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/api.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/api/api.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/Interfaces.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/api.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/bin/Debug/net7.0/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/api/bin/Debug/net7.0/appsettings.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.csproj.CoreCompileInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/api.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/ref/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/ref/api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/Debug/net7.0/refint/api.dll" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/Debug/net7.0/refint/api.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/api/obj/rider.project.restore.info" afterDir="false" />
-    </list>
+    <list default="true" id="1af56665-5eb1-487f-9d95-1cf7cfc464e8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -57,9 +18,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2WU8oCcfiCtzX8rwe1BrMqk4m65" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -82,9 +43,9 @@
   },
   "keyToStringList": {
     "rider.external.source.directories": [
-      "C:\\Users\\nicol\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\DecompilerCache",
-      "C:\\Users\\nicol\\AppData\\Roaming\\JetBrains\\Rider2023.2\\resharper-host\\SourcesCache",
-      "C:\\Users\\nicol\\AppData\\Local\\Symbols\\src"
+      "C:\\Users\\Anton\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\DecompilerCache",
+      "C:\\Users\\Anton\\AppData\\Roaming\\JetBrains\\Rider2023.1\\resharper-host\\SourcesCache",
+      "C:\\Users\\Anton\\AppData\\Local\\Symbols\\src"
     ]
   }
 }]]></component>
@@ -135,7 +96,10 @@
       </method>
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
-      <deployment type="dockerfile" />
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <EXTENSION ID="com.jetbrains.rider.docker.debug" isFastModeEnabled="true" isSslEnabled="false" />
       <method v="2" />
     </configuration>
     <configuration name="api/Dockerfile" type="docker-deploy" factoryName="dockerfile" server-name="Docker">
@@ -168,6 +132,7 @@
       <option name="presentableId" value="Default" />
       <updated>1696775971275</updated>
       <workItem from="1696775972553" duration="12186000" />
+      <workItem from="1697097562596" duration="995000" />
     </task>
     <servers />
   </component>
