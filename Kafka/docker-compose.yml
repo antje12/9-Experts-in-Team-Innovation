@@ -134,12 +134,6 @@ services:
       - 8080:8080
     restart: unless-stopped
     depends_on:
-#      - zookeeper-1
-#      - zookeeper-2
-#      - zookeeper-3
-#      - kafka-1
-#      - kafka-2
-#      - kafka-3
       - schema-registry
     environment:
       KAFKA_BROKERS: kafka-1:9092,kafka-2:9092,kafka-3:9092

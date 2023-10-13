@@ -9,6 +9,8 @@
 
     <ItemGroup>
         <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
+        <PackageReference Include="Confluent.SchemaRegistry" Version="2.2.0" />
+        <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
         <PackageReference Include="StackExchange.Redis" Version="2.6.122" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
