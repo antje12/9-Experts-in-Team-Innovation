@@ -1,0 +1,15 @@
+{
+	"namespace": "git.avro",
+	"type": "record",
+	"name": "Shower",
+	"fields": [
+		{"name": "DataRawId",  "type": "string"},
+		{"name": "DCreated", "type": "string"},
+		{"name": "DReported", "type": "string"},
+		{"name": "SensorId", "type": "string"},
+		{"name": "DShowerState", "type": "string"},
+		{"name": "DTemperature", "type": "string"},
+		{"name": "DHumidity", "type": "string"},
+		{"name": "DBattery", "type": "string"}
+	]
+}

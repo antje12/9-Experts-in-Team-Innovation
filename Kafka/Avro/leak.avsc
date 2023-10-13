@@ -1,0 +1,15 @@
+{
+	"namespace": "git.avro",
+	"type": "record",
+	"name": "Leak",
+	"fields": [
+		{"name": "DataRaw_id",  "type": "string"},
+		{"name": "DCreated", "type": "string"},
+		{"name": "DReported", "type": "string"},
+		{"name": "DLifeTimeUseCount", "type": "string"},
+		{"name": "LeakLevel_id", "type": "string"},
+		{"name": "Sensor_id", "type": "string"},
+		{"name": "DTemperatureOut", "type": "string"},
+		{"name": "DTemperatureIn", "type": "string"}
+	]
+}
