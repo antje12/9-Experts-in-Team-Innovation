@@ -1,0 +1,95 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+      "DataRaw_id",
+      "DCreated",
+      "DReported",
+      "DLifeTimeUseCount",
+      "LeakLevel_id",
+      "Sensor_id",
+      "DTemperatureOut",
+      "DTemperatureIn"
+    ],
+    "properties": {
+      "DataRaw_id": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint ID",
+        "examples": [
+          "524192"
+        ]
+      },
+      "DCreated": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint created in system",
+        "examples": [
+          "31/08/2023  10.22.18"
+        ]
+      },
+      "DReported": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint reported at sensor",
+        "examples": [
+          "31/08/2023  07.24.10"
+        ]
+      },
+      "DLifeTimeUseCount": {
+        "type": "string",
+        "default": "",
+        "title": "Usage count",
+        "examples": [
+          "294"
+        ]
+      },
+      "LeakLevel_id": {
+        "type": "string",
+        "default": "",
+        "title": "Current leak level in percent",
+        "examples": [
+          "100"
+        ]
+      },
+      "Sensor_id": {
+        "type": "string",
+        "default": "",
+        "title": "Sensor ID",
+        "examples": [
+          "1006"
+        ]
+      },
+      "DTemperatureOut": {
+        "type": "string",
+        "default": "",
+        "title": "Temperature outside the pipe",
+        "examples": [
+          "20,7"
+        ]
+      },
+      "DTemperatureIn": {
+        "type": "string",
+        "default": "",
+        "title": "Temperature inside the pipe",
+        "examples": [
+          "20,8"
+        ]
+      }
+    },
+    "examples": [
+      {
+        "DataRaw_id" : "524192",
+        "DCreated" : "31/08/2023  10.22.18",
+        "DReported" : "31/08/2023  07.24.10",
+        "DLifeTimeUseCount" : "294",
+        "LeakLevel_id" : "100",
+        "Sensor_id" : "1006",
+        "DTemperatureOut" : "20,7",
+        "DTemperatureIn" : "20,8"
+      }
+    ]
+  }

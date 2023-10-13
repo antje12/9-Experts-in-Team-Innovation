@@ -1,0 +1,95 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+      "DataRawId",
+      "DCreated",
+      "DReported",
+      "SensorId",
+      "DShowerState",
+      "DTemperature",
+      "DHumidity",
+      "DBattery"
+    ],
+    "properties": {
+      "DataRawId": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint ID",
+        "examples": [
+          "43646"
+        ]
+      },
+      "DCreated": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint created in system",
+        "examples": [
+          "31/08/2023  10.22.18"
+        ]
+      },
+      "DReported": {
+        "type": "string",
+        "default": "",
+        "title": "Datapoint reported at sensor",
+        "examples": [
+          "31/08/2023  07.24.10"
+        ]
+      },
+      "SensorId": {
+        "type": "string",
+        "default": "",
+        "title": "Sensor ID",
+        "examples": [
+          "529"
+        ]
+      },
+      "DShowerState": {
+        "type": "string",
+        "default": "",
+        "title": "???",
+        "examples": [
+          "NULL"
+        ]
+      },
+      "DTemperature": {
+        "type": "string",
+        "default": "",
+        "title": "Shower temperature",
+        "examples": [
+          "21,48"
+        ]
+      },
+      "DHumidity": {
+        "type": "string",
+        "default": "",
+        "title": "Shower humidity",
+        "examples": [
+          "68"
+        ]
+      },
+      "DBattery": {
+        "type": "string",
+        "default": "",
+        "title": "Battery level in percent",
+        "examples": [
+          "100"
+        ]
+      }
+    },
+    "examples": [
+      {
+        "DataRawId" : "43646",
+        "DCreated" : "31/08/2023  10.22.18",
+        "DReported" : "31/08/2023  07.24.10",
+        "SensorId" : "529",
+        "DShowerState" : "NULL",
+        "DTemperature" : "21,48",
+        "DHumidity" : "68",
+        "DBattery" : "100"
+      }
+    ]
+  }
