@@ -1,86 +1,155 @@
 version: "3"
 services:
-  namenode:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    hostname: namenode
-    command: ["hdfs", "namenode"]
-    ports:
-      - 9870:9870
-    env_file:
-      - ./HDFS/config
-    environment:
-        ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+  # namenode:
+  #   #restart: unless-stopped
+  #   image: apache/hadoop:3
+  #   hostname: namenode
+  #   command: ["hdfs", "namenode"]
+  #   ports:
+  #     - 9870:9870
+  #   env_file:
+  #     - ./HDFS/config
+  #   environment:
+  #       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
     
-  datanode:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    command: ["hdfs", "datanode"]
-    env_file:
-      - ./HDFS/config
-    volumes:
-      - ./datanode_data:/hadoop/dfs/data
+  # datanode:
+  #   #restart: unless-stopped
+  #   image: apache/hadoop:3
+  #   command: ["hdfs", "datanode"]
+  #   env_file:
+  #     - ./HDFS/config
+  #   volumes:
+  #     - ./datanode_data:/hadoop/dfs/data
   
-  resourcemanager:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    hostname: resourcemanager
-    command: ["yarn", "resourcemanager"]
+  # resourcemanager:
+  #   #restart: unless-stopped
+  #   image: apache/hadoop:3
+  #   hostname: resourcemanager
+  #   command: ["yarn", "resourcemanager"]
+  #   ports:
+  #       - 8088:8088
+  #   env_file:
+  #     - ./HDFS/config
+  #   volumes:
+  #     - ./test.sh:/opt/test.sh
+
+  # nodemanager:
+  #   #restart: unless-stopped
+  #   image: apache/hadoop:3
+  #   command: ["yarn", "nodemanager"]
+  #   env_file:
+  #     - ./HDFS/config
+
+  # hive-server:
+  #   #restart: unless-stopped
+  #   image: bde2020/hive:2.3.2-postgresql-metastore
+  #   env_file:
+  #     - ./HDFS/hadoop-hive.env
+  #   depends_on:
+  #     - hive-metastore
+  #     - namenode
+  #     - datanode
+  #   environment:
+  #     SERVICE_PRECONDITION: "hive-metastore:9083"
+  #     HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
+
+  # hive-metastore:
+  #   image: bde2020/hive:2.3.2-postgresql-metastore
+  #   env_file:
+  #     - ./HDFS/hadoop-hive.env
+  #   depends_on:
+  #     - hive-metastore-db
+  #   command: /opt/hive/bin/hive --service metastore
+  #   environment:
+  #     SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
+  #   ports:
+  #     - "9083:9083"
+
+  # hive-metastore-db:
+  #   #restart: unless-stopped
+  #   build: 
+  #     context: ./HIVE
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - POSTGRES_HOST_AUTH_METHOD=trust
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   ports:
+  #     - "5432:5432"
+
+  # redis-server:
+  #   image: redis/redis-stack-server:latest
+  #   ports:
+  #     - 6379:6379
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: aguardio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
-        - 8088:8088
-    env_file:
-      - ./HDFS/config
+      - "5444:5432"
     volumes:
-      - ./test.sh:/opt/test.sh
-
-  nodemanager:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    command: ["yarn", "nodemanager"]
-    env_file:
-      - ./HDFS/config
-
-  hive-server:
-    #restart: unless-stopped
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    env_file:
-      - ./HDFS/hadoop-hive.env
-    depends_on:
-      - hive-metastore
-      - namenode
-      - datanode
-    environment:
-      SERVICE_PRECONDITION: "hive-metastore:9083"
-      HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
-
-  hive-metastore:
-    image: bde2020/hive:2.3.2-postgresql-metastore
-    env_file:
-      - ./HDFS/hadoop-hive.env
-    depends_on:
-      - hive-metastore-db
-    command: /opt/hive/bin/hive --service metastore
-    environment:
-      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
+      - postgres_sensor_data:/var/lib/postgresql/data
+    networks:
+      common.network:
+  
+  mongo.one.db:
+    container_name: mongo.one.db
+    image: mongo:latest
+    networks:
+      common.network:
     ports:
-      - "9083:9083"
-
-  hive-metastore-db:
-    #restart: unless-stopped
-    build: 
-      context: ./HIVE
-      dockerfile: Dockerfile
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - 20000:27017
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - mongo.one.vol:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+ 
+  mongo.two.db:
+    container_name: mongo.two.db
+    image: mongo:latest
+    networks:
+      common.network:
     ports:
-      - "5432:5432"
-
-  redis-server:
-    image: redis/redis-stack-server:latest
+      - 20001:27017
+    depends_on:
+      - mongo.one.db
+    volumes:
+      - mongo.two.vol:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+ 
+  mongo.three.db:
+    container_name: mongo.three.db
+    image: mongo:latest
+    networks:
+      common.network:
     ports:
-      - 6379:6379
+      - 20002:27017
+    depends_on:
+      - mongo.one.db      
+    volumes:
+      - mongo.three.vol:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
 
+networks:
+  common.network:
+    driver: bridge
+ 
 volumes:
   postgres_data:
+  postgres_sensor_data:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
+  mongo.one.vol:
+    name: "mongo.one.vol"
+ 
+  mongo.two.vol:
+    name: "mongo.two.vol"
+ 
+  mongo.three.vol:
+    name: "mongo.three.vol"

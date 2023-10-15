@@ -27,6 +27,7 @@ public sealed partial class RedisPluginService : IDisposable
 
     public void Dispose()
     {
+        _redis.Dispose();
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }

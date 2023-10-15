@@ -1,4 +1,4 @@
-using DatabasePlugin.Models;
+using Common.Models;
 
 namespace DatabasePlugin.Repositories;
 

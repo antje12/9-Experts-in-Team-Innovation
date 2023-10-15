@@ -1,27 +1,18 @@
-using DatabasePlugin.Models;
-using Microsoft.EntityFrameworkCore;
+using Common.Models;
 using MongoDB.Driver;
-using MongoDB.EntityFrameworkCore.Extensions;
 
 namespace DatabasePlugin.Context;
 
-public class MongoDbContext : DbContext
+public class MongoDbContext
 {
-    public DbSet<LeakSensorData> SensorData { get; set; }
-    
-    public static MongoDbContext Create(IMongoDatabase database) =>
-        new(new DbContextOptionsBuilder<MongoDbContext>()
-            .UseMongoDB(database.Client, database.DatabaseNamespace.DatabaseName)
-            .Options);
-    
-    public MongoDbContext(DbContextOptions options)
-        : base(options)
+    private readonly IMongoDatabase _database;
+
+    public MongoDbContext()
     {
+        MongoClient client = new("mongodb://localhost:20000,localhost:20001,localhost:20002/?replicaSet=dbrs");
+        _database = client.GetDatabase("aguardio");
     }
-    
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.Entity<LeakSensorData>().ToCollection("sensor_data");
-    }
+
+    public IMongoCollection<LeakSensorData> LeakSensorDatas => 
+        _database.GetCollection<LeakSensorData>("LeakSensorData");
 }

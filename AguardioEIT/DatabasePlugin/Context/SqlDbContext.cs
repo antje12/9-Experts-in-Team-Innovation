@@ -1,4 +1,4 @@
-using DatabasePlugin.Models;
+using Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatabasePlugin.Context;
@@ -7,7 +7,7 @@ public class SqlDbContext : DbContext
 {
     public DbSet<LeakSensorData> LeakSensorData { get; set; }
     
-    public SqlDbContext(DbContextOptions options)
+    public SqlDbContext(DbContextOptions<SqlDbContext> options)
         : base(options)
     {
     }

@@ -1,4 +1,4 @@
-using DatabasePlugin.Models;
+using Common.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatabasePlugin.Repositories;
