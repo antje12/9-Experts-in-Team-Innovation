@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KafkaPlugin", "KafkaPlugin\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedisPlugin", "RedisPlugin\RedisPlugin.csproj", "{0F05AE62-E6D3-42C8-B85F-34D4EF35BA37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabasePlugin", "DatabasePlugin\DatabasePlugin.csproj", "{35D19C63-A852-40E0-9EFC-58D1E6AA5314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{ABC15972-00F5-40A4-9301-38DDF59E8E97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{0F05AE62-E6D3-42C8-B85F-34D4EF35BA37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F05AE62-E6D3-42C8-B85F-34D4EF35BA37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F05AE62-E6D3-42C8-B85F-34D4EF35BA37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35D19C63-A852-40E0-9EFC-58D1E6AA5314}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35D19C63-A852-40E0-9EFC-58D1E6AA5314}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35D19C63-A852-40E0-9EFC-58D1E6AA5314}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35D19C63-A852-40E0-9EFC-58D1E6AA5314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
