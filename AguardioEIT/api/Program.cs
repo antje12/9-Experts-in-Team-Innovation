@@ -12,7 +12,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<IApplicationService, ApplicationService>();
-builder.Services.LoadPlugins();
+builder.Services.LoadPlugins(builder.Configuration);
 
 WebApplication app = builder.Build();
 

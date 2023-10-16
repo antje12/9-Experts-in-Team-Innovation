@@ -1,86 +1,86 @@
 version: "3"
 services:
-  # namenode:
-  #   #restart: unless-stopped
-  #   image: apache/hadoop:3
-  #   hostname: namenode
-  #   command: ["hdfs", "namenode"]
-  #   ports:
-  #     - 9870:9870
-  #   env_file:
-  #     - ./HDFS/config
-  #   environment:
-  #       ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+  namenode:
+    #restart: unless-stopped
+    image: apache/hadoop:3
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    ports:
+      - 9870:9870
+    env_file:
+      - ./HDFS/config
+    environment:
+        ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
     
-  # datanode:
-  #   #restart: unless-stopped
-  #   image: apache/hadoop:3
-  #   command: ["hdfs", "datanode"]
-  #   env_file:
-  #     - ./HDFS/config
-  #   volumes:
-  #     - ./datanode_data:/hadoop/dfs/data
+  datanode:
+    #restart: unless-stopped
+    image: apache/hadoop:3
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./HDFS/config
+    volumes:
+      - ./datanode_data:/hadoop/dfs/data
   
-  # resourcemanager:
-  #   #restart: unless-stopped
-  #   image: apache/hadoop:3
-  #   hostname: resourcemanager
-  #   command: ["yarn", "resourcemanager"]
-  #   ports:
-  #       - 8088:8088
-  #   env_file:
-  #     - ./HDFS/config
-  #   volumes:
-  #     - ./test.sh:/opt/test.sh
+  resourcemanager:
+    #restart: unless-stopped
+    image: apache/hadoop:3
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+        - 8088:8088
+    env_file:
+      - ./HDFS/config
+    volumes:
+      - ./test.sh:/opt/test.sh
 
-  # nodemanager:
-  #   #restart: unless-stopped
-  #   image: apache/hadoop:3
-  #   command: ["yarn", "nodemanager"]
-  #   env_file:
-  #     - ./HDFS/config
+  nodemanager:
+    #restart: unless-stopped
+    image: apache/hadoop:3
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./HDFS/config
 
-  # hive-server:
-  #   #restart: unless-stopped
-  #   image: bde2020/hive:2.3.2-postgresql-metastore
-  #   env_file:
-  #     - ./HDFS/hadoop-hive.env
-  #   depends_on:
-  #     - hive-metastore
-  #     - namenode
-  #     - datanode
-  #   environment:
-  #     SERVICE_PRECONDITION: "hive-metastore:9083"
-  #     HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
+  hive-server:
+    #restart: unless-stopped
+    image: bde2020/hive:2.3.2-postgresql-metastore
+    env_file:
+      - ./HDFS/hadoop-hive.env
+    depends_on:
+      - hive-metastore
+      - namenode
+      - datanode
+    environment:
+      SERVICE_PRECONDITION: "hive-metastore:9083"
+      HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
 
-  # hive-metastore:
-  #   image: bde2020/hive:2.3.2-postgresql-metastore
-  #   env_file:
-  #     - ./HDFS/hadoop-hive.env
-  #   depends_on:
-  #     - hive-metastore-db
-  #   command: /opt/hive/bin/hive --service metastore
-  #   environment:
-  #     SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
-  #   ports:
-  #     - "9083:9083"
+  hive-metastore:
+    image: bde2020/hive:2.3.2-postgresql-metastore
+    env_file:
+      - ./HDFS/hadoop-hive.env
+    depends_on:
+      - hive-metastore-db
+    command: /opt/hive/bin/hive --service metastore
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
+    ports:
+      - "9083:9083"
 
-  # hive-metastore-db:
-  #   #restart: unless-stopped
-  #   build: 
-  #     context: ./HIVE
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - POSTGRES_HOST_AUTH_METHOD=trust
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-  #   ports:
-  #     - "5432:5432"
+  hive-metastore-db:
+    #restart: unless-stopped
+    build: 
+      context: ./HIVE
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 
-  # redis-server:
-  #   image: redis/redis-stack-server:latest
-  #   ports:
-  #     - 6379:6379
+  redis-server:
+    image: redis/redis-stack-server:latest
+    ports:
+      - 6379:6379
 
   api:
     build: 
@@ -93,6 +93,8 @@ services:
       - mongo.one.db
       - mongo.two.db
       - mongo.three.db
+    environment:
+      - DOCKERIZED=true
     networks:
       common.network:
 
