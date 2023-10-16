@@ -12,7 +12,7 @@ public sealed partial class RedisPluginService : IRedisPluginService
         
     public RedisPluginService()
     {
-        _redis = ConnectionMultiplexer.Connect("localhost:6379");
+        _redis = ConnectionMultiplexer.Connect("redis-server:6379");
         _db = _redis.GetDatabase();
     }
 

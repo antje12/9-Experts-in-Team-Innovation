@@ -78,9 +78,12 @@ services:
       - "5432:5432"
 
   redis-server:
-    image: redis/redis-stack-server:latest
+    image: redis
     ports:
       - 6379:6379
+    volumes:
+      - ./AguardioEIT/RedisPlugin/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
 
   api:
     build: 
@@ -95,8 +98,6 @@ services:
       - mongo.three.db
     environment:
       - DOCKERIZED=true
-    networks:
-      common.network:
 
   postgres:
     image: postgres:13
@@ -108,14 +109,10 @@ services:
       - postgres_sensor_data:/var/lib/postgresql/data
     ports:
       - 5444:5432
-    networks:
-      common.network:
   
   mongo.one.db:
     container_name: mongo.one.db
     image: mongo:latest
-    networks:
-      common.network:
     volumes:
       - mongo.one.vol:/data/db
     restart: always
@@ -124,8 +121,6 @@ services:
   mongo.two.db:
     container_name: mongo.two.db
     image: mongo:latest
-    networks:
-      common.network:
     depends_on:
       - mongo.one.db
     volumes:
@@ -136,18 +131,12 @@ services:
   mongo.three.db:
     container_name: mongo.three.db
     image: mongo:latest
-    networks:
-      common.network:
     depends_on:
       - mongo.one.db      
     volumes:
       - mongo.three.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-
-networks:
-  common.network:
-    driver: bridge
  
 volumes:
   postgres_data:

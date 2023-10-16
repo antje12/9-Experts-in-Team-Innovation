@@ -1,5 +1,4 @@
 ﻿using Interfaces;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RedisPlugin;
