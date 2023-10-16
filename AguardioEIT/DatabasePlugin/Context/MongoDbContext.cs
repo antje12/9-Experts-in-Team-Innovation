@@ -9,7 +9,7 @@ public class MongoDbContext
 
     public MongoDbContext()
     {
-        MongoClient client = new("mongodb://localhost:20000,localhost:20001,localhost:20002/?replicaSet=dbrs");
+        MongoClient client = new("mongodb://mongo.one.db:27017,mongo.two.db:27017,mongo.three.db:27017/?replicaSet=dbrs");
         _database = client.GetDatabase("aguardio");
     }
 

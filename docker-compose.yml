@@ -82,16 +82,30 @@ services:
   #   ports:
   #     - 6379:6379
 
+  api:
+    build: 
+      context: ./AguardioEIT
+      dockerfile: Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - postgres
+      - mongo.one.db
+      - mongo.two.db
+      - mongo.three.db
+    networks:
+      common.network:
+
   postgres:
     image: postgres:13
     environment:
       POSTGRES_DB: aguardio
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-    ports:
-      - "5444:5432"
     volumes:
       - postgres_sensor_data:/var/lib/postgresql/data
+    ports:
+      - 5444:5432
     networks:
       common.network:
   
@@ -100,8 +114,6 @@ services:
     image: mongo:latest
     networks:
       common.network:
-    ports:
-      - 20000:27017
     volumes:
       - mongo.one.vol:/data/db
     restart: always
@@ -112,8 +124,6 @@ services:
     image: mongo:latest
     networks:
       common.network:
-    ports:
-      - 20001:27017
     depends_on:
       - mongo.one.db
     volumes:
@@ -126,8 +136,6 @@ services:
     image: mongo:latest
     networks:
       common.network:
-    ports:
-      - 20002:27017
     depends_on:
       - mongo.one.db      
     volumes:
@@ -142,14 +150,9 @@ networks:
 volumes:
   postgres_data:
   postgres_sensor_data:
-  mongo1_data:
-  mongo2_data:
-  mongo3_data:
   mongo.one.vol:
     name: "mongo.one.vol"
- 
   mongo.two.vol:
     name: "mongo.two.vol"
- 
   mongo.three.vol:
     name: "mongo.three.vol"

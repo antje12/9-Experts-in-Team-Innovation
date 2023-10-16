@@ -9,7 +9,7 @@ public class DatabasePlugin : IPlugin
 {
     public void Initialize(IServiceCollection services)
     {
-        const string sqlConnectionString = "Host=localhost;Database=aguardio;Username=postgres;Password=postgres;Port=5444";
+        const string sqlConnectionString = "Host=postgres;Database=aguardio;Username=postgres;Password=postgres;Port=5432";
 
         services.AddDbContext<SqlDbContext>(options =>
         {

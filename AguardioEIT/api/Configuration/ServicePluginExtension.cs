@@ -1,33 +1,54 @@
 using System.Reflection;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.Extensions.Options;
+using System.Runtime.Loader;
 
-namespace api;
-
-public static class ServicePluginExtension
+namespace api.Configuration
 {
-    public static IServiceCollection LoadPlugins(this IServiceCollection services, IConfiguration configuration)
+    public static class ServicePluginExtension
     {
-        var plugins = configuration.GetSection("Plugins").Get<List<PluginConfiguration>>();
-
-        plugins.ForEach(p =>
+        public static IServiceCollection LoadPlugins(this IServiceCollection services)
         {
-            Assembly assembly = Assembly.LoadFrom(p.Path);
-            var part = new AssemblyPart(assembly);
-            
-            services.AddControllersWithViews().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+            string pluginsDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "plugins");
+            string[] pluginFiles = Directory.GetFiles(pluginsDirectory, "*.dll");
 
-            var pluginClass = assembly.GetTypes().SingleOrDefault(t => typeof(IPlugin).IsAssignableFrom(t));
-
-            if (pluginClass != null)
+            AssemblyLoadContext loadContext = new(null, true);
+            loadContext.Resolving += (context, name) =>
             {
-                var initMethod = pluginClass.GetMethod(nameof(IPlugin.Initialize), BindingFlags.Public | BindingFlags.Instance);
-                var obj = Activator.CreateInstance(pluginClass);
-                initMethod.Invoke(obj, new object[] { services });
-            }
-        });
+                string dependencyPath = Path.Combine(pluginsDirectory, $"{name.Name}.dll");
+                return context.LoadFromAssemblyPath(dependencyPath);
+            };
 
-        return services;
+            foreach (string pluginFile in pluginFiles)
+            {
+                Console.WriteLine($"Attempting to load assembly from: {pluginFile}");
+                try
+                {
+                    Assembly assembly = loadContext.LoadFromAssemblyPath(pluginFile);
+
+                    Type? pluginClass = assembly.GetTypes().FirstOrDefault(t => typeof(IPlugin).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+
+                    if (pluginClass == null) continue;
+
+                    AssemblyPart part = new(assembly);
+
+                    services.AddControllersWithViews().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(part));
+
+                    MethodInfo? initMethod = pluginClass.GetMethod(nameof(IPlugin.Initialize), BindingFlags.Public | BindingFlags.Instance);
+                    object? obj = Activator.CreateInstance(pluginClass);
+                    initMethod.Invoke(obj, new object[] { services });
+                }
+                catch (BadImageFormatException)
+                {
+                    Console.WriteLine($"Error loading {pluginFile}: Not a valid .NET assembly or targets a different runtime.");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error loading {pluginFile}: {ex.Message}");
+                }
+            }
+
+            return services;
+        }
     }
 }
