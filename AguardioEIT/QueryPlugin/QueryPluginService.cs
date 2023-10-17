@@ -26,20 +26,19 @@ public class QueryPluginService : IQueryPluginService
     /// Performs a lookup in the cache for the given cacheKey. If the data is found, it is returned.
     /// Else the data is fetched from the database, cached and returned.
     /// </summary>
-    /// <param name="cacheKey">The key used to perform a lookup in the cache</param>
     /// <param name="query">The query to be performed if no data is found in the cache</param>
     /// <param name="queryId">The query to use in a database lookup. Can be a dataId or a sensorId</param>
     /// <returns></returns>
-    public async Task<QueryResponse> GetStoredData(string cacheKey, Query query, int queryId)
+    public async Task<QueryResponse> GetStoredData(Query query, int queryId)
     {
         try
         {
             // Throws KeyNotFoundException no data is found
-            return await FetchDataFromCache(cacheKey);
+            return await FetchDataFromCache(query, queryId);
         }
         catch (KeyNotFoundException)
         {
-            return await FetchDataFromDb(cacheKey, query, queryId);
+            return await FetchDataFromDb(query, queryId);
         }
         catch (Exception e)
         {
@@ -53,8 +52,9 @@ public class QueryPluginService : IQueryPluginService
         }
     }
 
-    private async Task<QueryResponse> FetchDataFromCache(string cacheKey)
+    private async Task<QueryResponse> FetchDataFromCache(Query query, int queryId)
     {
+        string cacheKey = GetCacheKey(query, queryId);
         string cachedData = await _redisService.GetAsync(cacheKey);
 
         IEnumerable<LeakSensorData>? data = JsonConvert.DeserializeObject<List<LeakSensorData>>(cachedData);
@@ -66,7 +66,7 @@ public class QueryPluginService : IQueryPluginService
         };
     }
 
-    private async Task<QueryResponse> FetchDataFromDb(string cacheKey, Query query, int queryId)
+    private async Task<QueryResponse> FetchDataFromDb(Query query, int queryId)
     {
         IEnumerable<LeakSensorData>? data = query switch
         {
@@ -87,12 +87,26 @@ public class QueryPluginService : IQueryPluginService
         
         // Set data in cache with 30 minutes expiration
         string serializedData = JsonConvert.SerializeObject(data);
-        await _redisService.SetAsync(cacheKey, serializedData, 30 * 60);
+        string cacheKey = GetCacheKey(query, queryId);
+        await _redisService.SetAsync(cacheKey, serializedData);
         
         return new QueryResponse
         {
             fromCache = false,
             data = data
         };
+    }
+    
+    private static string GetCacheKey(Query query, int queryId)
+    {
+        string cacheKey = query switch
+        {
+            Query.SqlGetByDataId => $"Sql:DataId={queryId}",
+            Query.SqlGetBySensorId => $"Sql:SensorId={queryId}",
+            Query.MongoDbGetByDataId => $"MongoDb:DataId={queryId}",
+            Query.MongoDbGetBySensorId => $"MongoDb:SensorId={queryId}",
+            _ => throw new ArgumentOutOfRangeException(nameof(query), query, null)
+        };
+        return cacheKey;
     }
 }

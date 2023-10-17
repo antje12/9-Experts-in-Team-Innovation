@@ -17,11 +17,11 @@ public class QueryPluginController : ControllerBase
     }
 
     [HttpGet("PerformQuery")]
-    public async Task<ActionResult> MongoDbGetBySensorId(string cacheKey, Query query, int queryId)
+    public async Task<ActionResult> MongoDbGetBySensorId(Query query, int queryId)
     {
         try
         {
-            QueryResponse queryResponse = await _queryPluginService.GetStoredData(cacheKey, query, queryId);
+            QueryResponse queryResponse = await _queryPluginService.GetStoredData(query, queryId);
             return Ok(queryResponse);
         } catch (Exception e)
         {

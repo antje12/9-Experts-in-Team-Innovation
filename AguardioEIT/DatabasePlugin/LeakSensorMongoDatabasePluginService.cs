@@ -3,21 +3,28 @@ using DatabasePlugin.Context;
 using Interfaces;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using JsonConvert = Newtonsoft.Json.JsonConvert;
 
 namespace DatabasePlugin;
 
 public sealed class LeakSensorMongoDatabasePluginService : ILeakSensorMongoDatabasePluginService
 {
     private readonly MongoDbContext _mongoDbContext;
+    private readonly IRedisPluginService _redisPluginService;
 
-    public LeakSensorMongoDatabasePluginService(MongoDbContext mongoDbContext)
+    public LeakSensorMongoDatabasePluginService(MongoDbContext mongoDbContext, IRedisPluginService redisPluginService)
     {
         _mongoDbContext = mongoDbContext;
+        _redisPluginService = redisPluginService;
     }
     
     public async Task SaveSensorDataAsync(LeakSensorData data)
     {
         await _mongoDbContext.LeakSensorDatas.InsertOneAsync(data);
+        await _redisPluginService.SetAsync($"MongoDb:DataId={data.DataRawId}", JsonConvert.SerializeObject(data));
+
+        IEnumerable<LeakSensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync(data.SensorId);
+        await _redisPluginService.SetAsync($"MongoDb:SensorId={data.SensorId}", JsonConvert.SerializeObject(sensorDataCollection));
     }
 
     public async Task<LeakSensorData> GetSensorDataByIdAsync(int dataId)

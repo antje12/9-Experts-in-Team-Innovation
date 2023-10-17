@@ -16,7 +16,7 @@ public sealed partial class RedisPluginService : IRedisPluginService
         _db = _redis.GetDatabase();
     }
 
-    public async Task SetAsync(string key, string value, int? expirationSeconds = null)
+    public async Task SetAsync(string key, string value, int? expirationSeconds = 30 * 60)
     {
         TimeSpan? expiration = null;
         if (expirationSeconds.HasValue)
