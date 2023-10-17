@@ -1,4 +1,5 @@
 using Common.Models;
+using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DatabasePlugin;
@@ -7,12 +8,12 @@ namespace DatabasePlugin;
 [Route("[controller]")]
 public class LeakSensorDatabaseController : ControllerBase
 {
-    private readonly LeakSensorSqlDatabasePluginService _leakSensorSqlDatabasePluginService;
-    private readonly LeakSensorMongoDatabasePluginService _leakSensorMongoDatabasePluginService;
+    private readonly ILeakSensorSqlDatabasePluginService _leakSensorSqlDatabasePluginService;
+    private readonly ILeakSensorMongoDatabasePluginService _leakSensorMongoDatabasePluginService;
 
     public LeakSensorDatabaseController(
-        LeakSensorSqlDatabasePluginService leakSensorSqlDatabasePluginService, 
-        LeakSensorMongoDatabasePluginService leakSensorMongoDatabasePluginService
+        ILeakSensorSqlDatabasePluginService leakSensorSqlDatabasePluginService, 
+        ILeakSensorMongoDatabasePluginService leakSensorMongoDatabasePluginService
     )
     {
         _leakSensorSqlDatabasePluginService = leakSensorSqlDatabasePluginService;

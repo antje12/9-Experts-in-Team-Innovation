@@ -1,10 +1,11 @@
 using Common.Models;
 using DatabasePlugin.Context;
 using DatabasePlugin.Repositories;
+using Interfaces;
 
 namespace DatabasePlugin;
 
-public class LeakSensorSqlDatabasePluginService
+public sealed class LeakSensorSqlDatabasePluginService : ILeakSensorSqlDatabasePluginService
 {
     private readonly LeakSensorDataRepository _repo;
     

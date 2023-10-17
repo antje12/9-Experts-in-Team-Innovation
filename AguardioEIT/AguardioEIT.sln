@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabasePlugin", "DatabaseP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{ABC15972-00F5-40A4-9301-38DDF59E8E97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryPlugin", "QueryPlugin\QueryPlugin.csproj", "{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABC15972-00F5-40A4-9301-38DDF59E8E97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

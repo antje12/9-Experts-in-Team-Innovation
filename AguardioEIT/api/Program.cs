@@ -1,4 +1,3 @@
-using api;
 using api.Configuration;
 using api.Service;
 using Interfaces;

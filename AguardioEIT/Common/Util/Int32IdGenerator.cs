@@ -1,3 +1,4 @@
+using System;
 using MongoDB.Bson.Serialization;
 
 namespace Common.Util;

@@ -17,7 +17,7 @@ public class DatabasePlugin : IPlugin
         });
 
         services.AddScoped<MongoDbContext>();
-        services.AddScoped<LeakSensorSqlDatabasePluginService>();
-        services.AddScoped<LeakSensorMongoDatabasePluginService>();
+        services.AddScoped<ILeakSensorSqlDatabasePluginService, LeakSensorSqlDatabasePluginService>();
+        services.AddScoped<ILeakSensorMongoDatabasePluginService, LeakSensorMongoDatabasePluginService>();
     }
 }

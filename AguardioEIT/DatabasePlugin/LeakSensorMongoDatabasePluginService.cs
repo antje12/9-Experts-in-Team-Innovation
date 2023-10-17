@@ -1,16 +1,16 @@
 using Common.Models;
 using DatabasePlugin.Context;
+using Interfaces;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
 namespace DatabasePlugin;
 
-public class LeakSensorMongoDatabasePluginService
+public sealed class LeakSensorMongoDatabasePluginService : ILeakSensorMongoDatabasePluginService
 {
     private readonly MongoDbContext _mongoDbContext;
 
-    public LeakSensorMongoDatabasePluginService(
-        MongoDbContext mongoDbContext)
+    public LeakSensorMongoDatabasePluginService(MongoDbContext mongoDbContext)
     {
         _mongoDbContext = mongoDbContext;
     }

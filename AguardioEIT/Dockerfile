@@ -22,4 +22,6 @@ WORKDIR /app
 # Copy the main app and plugins
 COPY --from=build /app/publish .
 COPY --from=build /app/plugins ./plugins
+# Copy the JSON file that holds the plugin configuration
+COPY ./api/appsettings.json /app/publish/appsettings.json
 ENTRYPOINT ["dotnet", "api.dll"]
