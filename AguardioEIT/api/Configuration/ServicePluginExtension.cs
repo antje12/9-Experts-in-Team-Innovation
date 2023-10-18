@@ -6,12 +6,12 @@ namespace api.Configuration;
 
 public static class ServicePluginExtension
 {
-    public static IServiceCollection LoadPlugins(this IServiceCollection services, IConfiguration configuration)
+    public static void LoadPlugins(this IServiceCollection services, IConfiguration configuration)
     {
-        return ResolvePlugins(services, configuration);
+        ResolvePlugins(services, configuration);
     }
 
-    private static IServiceCollection ResolvePlugins(this IServiceCollection services, IConfiguration configuration)
+    private static void ResolvePlugins(this IServiceCollection services, IConfiguration configuration)
     {
         List<PluginConfiguration>? plugins = Environment.GetEnvironmentVariable("DOCKERIZED") is null ? 
             configuration.GetSection("LocalPlugins").Get<List<PluginConfiguration>>() : 
@@ -31,7 +31,5 @@ public static class ServicePluginExtension
             object? obj = Activator.CreateInstance(pluginClass);
             initMethod?.Invoke(obj, new object[] { services });
         });
-
-        return services;
     }
 }
