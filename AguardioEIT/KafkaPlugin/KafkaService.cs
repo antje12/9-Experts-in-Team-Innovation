@@ -68,32 +68,32 @@ public class KafkaService : IKafkaPluginService
 
     public string Produce()
     {
-        Shower result;
+        Leak result;
         using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
-        using (var producer = new ProducerBuilder<string, Shower>(_producerConfig)
-                   .SetValueSerializer(new AvroSerializer<Shower>(schemaRegistry, _avroSerializerConfig))
+        using (var producer = new ProducerBuilder<string, Leak>(_producerConfig)
+                   .SetValueSerializer(new AvroSerializer<Leak>(schemaRegistry, _avroSerializerConfig))
                    .Build())
         {
-            var shower = new Shower()
+            var leak = new Leak()
             {
-                DataRawId = "43646",
+                DataRaw_id = "1337",
                 DCreated = "31/08/2023  10.22.18",
                 DReported = "31/08/2023  07.24.10",
-                SensorId = "529",
-                DShowerState = "NULL",
-                DTemperature = "21,48",
-                DHumidity = "68",
-                DBattery = "100"
+                DLifeTimeUseCount = "2",
+                LeakLevel_id = "5",
+                Sensor_id = "22",
+                DTemperatureOut = "15",
+                DTemperatureIn = "17"
             };
-            result = producer.ProduceAsync("shower-topic", new Message<string, Shower>
+            result = producer.ProduceAsync("leak-topic", new Message<string, Leak>
                 {
-                    Key = shower.DataRawId,
-                    Value = shower
+                    Key = leak.DataRaw_id,
+                    Value = leak
                 }).Result
                 .Value;
         }
 
-        return result.DataRawId;
+        return result.DataRaw_id;
     }
 
     public string ConsumeStart()

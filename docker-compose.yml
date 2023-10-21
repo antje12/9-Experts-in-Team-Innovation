@@ -11,6 +11,8 @@ services:
       - ./HDFS/config
     environment:
         ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    networks:
+      sharednetwork:
     
   datanode:
     #restart: unless-stopped
@@ -20,6 +22,8 @@ services:
       - ./HDFS/config
     volumes:
       - ./datanode_data:/hadoop/dfs/data
+    networks:
+      sharednetwork:
   
   resourcemanager:
     #restart: unless-stopped
@@ -32,6 +36,8 @@ services:
       - ./HDFS/config
     volumes:
       - ./test.sh:/opt/test.sh
+    networks:
+      sharednetwork:
 
   nodemanager:
     #restart: unless-stopped
@@ -39,6 +45,8 @@ services:
     command: ["yarn", "nodemanager"]
     env_file:
       - ./HDFS/config
+    networks:
+      sharednetwork:
 
   hive-server:
     #restart: unless-stopped
@@ -52,6 +60,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "hive-metastore:9083"
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
+    networks:
+      sharednetwork:
 
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
@@ -64,6 +74,8 @@ services:
       SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
     ports:
       - "9083:9083"
+    networks:
+      sharednetwork:
 
   hive-metastore-db:
     #restart: unless-stopped
@@ -76,6 +88,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    networks:
+      sharednetwork:
 
   redis-server:
     image: redis
@@ -84,6 +98,8 @@ services:
     volumes:
       - ./AguardioEIT/RedisPlugin/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      sharednetwork:
 
   api:
     build: 
@@ -111,6 +127,8 @@ services:
       - postgres_sensor_data:/var/lib/postgresql/data
     ports:
       - 5444:5432
+    networks:
+      sharednetwork:
   
   mongo.one.db:
     container_name: mongo.one.db
@@ -119,6 +137,8 @@ services:
       - mongo.one.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    networks:
+      sharednetwork:
  
   mongo.two.db:
     container_name: mongo.two.db
@@ -129,6 +149,8 @@ services:
       - mongo.two.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    networks:
+      sharednetwork:
  
   mongo.three.db:
     container_name: mongo.three.db
@@ -139,6 +161,8 @@ services:
       - mongo.three.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+    networks:
+      sharednetwork:
  
 volumes:
   postgres_data:
