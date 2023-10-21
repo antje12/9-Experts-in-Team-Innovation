@@ -21,16 +21,17 @@ public class KafkaService : IKafkaPluginService
     private readonly SchemaRegistryConfig _schemaRegistryConfig;
     private readonly AvroSerializerConfig _avroSerializerConfig;
     private readonly List<ISpecificRecord> _results;
+    private readonly List<string> _errors;
 
     private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
     private const string GroupId = "KafkaPlugin";
     private const string SchemaRegistry = "http://schema-registry:8081";
     private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
-    
+
     public KafkaService(
-        ILeakSensorSqlDatabasePluginService sql, 
+        ILeakSensorSqlDatabasePluginService sql,
         ILeakSensorMongoDatabasePluginService mongo
-        )
+    )
     {
         this._sql = sql;
         this._mongo = mongo;
@@ -53,6 +54,7 @@ public class KafkaService : IKafkaPluginService
             BufferBytes = 100
         };
         _results = new List<ISpecificRecord>();
+        _errors = new List<string>();
     }
 
     public string Test()
@@ -63,7 +65,7 @@ public class KafkaService : IKafkaPluginService
     public string Status()
     {
         return "Messages collected: " + _results.Count + ", Collecting: " +
-               !_cancellationTokenSource?.IsCancellationRequested;
+               !_cancellationTokenSource?.IsCancellationRequested + ", Errors: " + string.Join(", ", _errors);
     }
 
     public string Produce()
@@ -77,8 +79,8 @@ public class KafkaService : IKafkaPluginService
             var leak = new Leak()
             {
                 DataRaw_id = "1337",
-                DCreated = "31/08/2023  10.22.18",
-                DReported = "31/08/2023  07.24.10",
+                DCreated = "31/08/2023 10.22.18",
+                DReported = "31/08/2023 07.24.10",
                 DLifeTimeUseCount = "2",
                 LeakLevel_id = "5",
                 Sensor_id = "22",
@@ -99,8 +101,10 @@ public class KafkaService : IKafkaPluginService
     public string ConsumeStart()
     {
         _cancellationTokenSource = new CancellationTokenSource();
-        var consumeShowerTask = Task.Run(() => ConsumeLoop<Shower>("shower", _cancellationTokenSource.Token), _cancellationTokenSource.Token);
-        var consumeLeakTask = Task.Run(() => ConsumeLoop<Leak>("leak", _cancellationTokenSource.Token), _cancellationTokenSource.Token);
+        var consumeShowerTask = Task.Run(() => ConsumeLoop<Shower>("shower", _cancellationTokenSource.Token),
+            _cancellationTokenSource.Token);
+        var consumeLeakTask = Task.Run(() => ConsumeLoop<Leak>("leak", _cancellationTokenSource.Token),
+            _cancellationTokenSource.Token);
         return "Consuming started...";
     }
 
@@ -117,7 +121,7 @@ public class KafkaService : IKafkaPluginService
             {
                 var consumeResult = consumer.Consume(_cancellationTokenSource.Token);
                 var result = consumeResult.Message.Value;
-                
+
                 _results.Add(result);
                 await SaveData(result);
                 Thread.Sleep(1000);
@@ -132,19 +136,27 @@ public class KafkaService : IKafkaPluginService
         switch (result)
         {
             case Leak l:
-                var leak = new LeakSensorData()
+                try
                 {
-                    DataRawId = Int32.Parse(l.DataRaw_id),
-                    DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                    DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                    DLifeTimeUseCount =  Int32.Parse(l.DLifeTimeUseCount),
-                    LeakLevelId =  Int32.Parse(l.LeakLevel_id),
-                    SensorId =  Int32.Parse(l.Sensor_id),
-                    DTemperatureOut =  Double.Parse(l.DTemperatureOut),
-                    DTemperatureIn = Double.Parse(l.DTemperatureIn)
-                };
-                await _sql.SaveSensorDataAsync(leak);
-                await _mongo.SaveSensorDataAsync(leak);
+                    var leak = new LeakSensorData()
+                    {
+                        DataRawId = Int32.Parse(l.DataRaw_id),
+                        DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                        DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                        DLifeTimeUseCount = Int32.Parse(l.DLifeTimeUseCount),
+                        LeakLevelId = Int32.Parse(l.LeakLevel_id),
+                        SensorId = Int32.Parse(l.Sensor_id),
+                        DTemperatureOut = Double.Parse(l.DTemperatureOut),
+                        DTemperatureIn = Double.Parse(l.DTemperatureIn)
+                    };
+                    //await _sql.SaveSensorDataAsync(leak);
+                    await _mongo.SaveSensorDataAsync(leak);
+                }
+                catch (Exception e)
+                {
+                    _errors.Add(e.Message);
+                }
+
                 break;
             case Shower s:
                 // ToDo
