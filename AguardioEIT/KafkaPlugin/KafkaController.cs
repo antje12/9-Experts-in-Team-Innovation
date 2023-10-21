@@ -7,40 +7,40 @@ namespace KafkaPlugin;
 [Route("[controller]")]
 public class KafkaController : ControllerBase
 {
-    private IKafkaPluginService ps;
+    private IKafkaPluginService _ps;
 
     public KafkaController(IKafkaPluginService ps)
     {
-        this.ps = ps;
+        this._ps = ps;
     }
 
     [HttpGet("Version")]
     public object Version()
     {
-        return $"Plugin Controller v 1.0 {ps.Test()}";
+        return $"Plugin Controller v 1.0 {_ps.Test()}";
     }
 
     [HttpGet("Status")]
     public object Status()
     {
-        return $"Plugin Controller v 1.0 {ps.Status()}";
+        return $"Plugin Controller v 1.0 {_ps.Status()}";
     }
 
     [HttpGet("Produce")]
     public object Produce()
     {
-        return $"Plugin Controller v 1.0 {ps.Produce()}";
+        return $"Plugin Controller v 1.0 {_ps.Produce()}";
     }
 
     [HttpGet("ConsumeStart")]
     public object ConsumeStart()
     {
-        return $"Plugin Controller v 1.0 {ps.ConsumeStart()}";
+        return $"Plugin Controller v 1.0 {_ps.ConsumeStart()}";
     }
 
     [HttpGet("ConsumeStop")]
     public object ConsumeStop()
     {
-        return $"Plugin Controller v 1.0 {ps.ConsumeStop()}";
+        return $"Plugin Controller v 1.0 {_ps.ConsumeStop()}";
     }
 }
