@@ -90,7 +90,7 @@ services:
       context: ./AguardioEIT
       dockerfile: Dockerfile
     ports:
-      - 8080:80
+      - 8082:80
     depends_on:
       - postgres
       - mongo.one.db
@@ -98,6 +98,8 @@ services:
       - mongo.three.db
     environment:
       - DOCKERIZED=true
+    networks:
+      sharednetwork:
 
   postgres:
     image: postgres:13
@@ -137,17 +139,6 @@ services:
       - mongo.three.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-
-  leak-sensor:
-    container_name: leak-sensor
-    build: ./kafkaProducer/leak_sensor
-    env_file: ./kafkaProducer/producer.env
-  
-  shower-sensor:
-    container_name: shower-sensor
-    build: ./kafkaProducer/shower_sensor
-    env_file: ./kafkaProducer/producer.env
-
  
 volumes:
   postgres_data:
@@ -158,3 +149,7 @@ volumes:
     name: "mongo.two.vol"
   mongo.three.vol:
     name: "mongo.three.vol"
+
+networks:
+  sharednetwork:
+    name: "sharednetwork"

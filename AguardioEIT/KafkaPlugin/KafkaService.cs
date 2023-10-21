@@ -22,27 +22,31 @@ public class KafkaService : IKafkaPluginService
     private readonly AvroSerializerConfig _avroSerializerConfig;
     private readonly List<ISpecificRecord> _results;
 
-    private string _dateFormat = "dd/MM/yyyy HH.mm.ss";
+    private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
+    private const string GroupId = "KafkaPlugin";
+    private const string SchemaRegistry = "http://schema-registry:8081";
+    private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
     
     public KafkaService(
         ILeakSensorSqlDatabasePluginService sql, 
-        ILeakSensorMongoDatabasePluginService mongo)
+        ILeakSensorMongoDatabasePluginService mongo
+        )
     {
         this._sql = sql;
         this._mongo = mongo;
         _producerConfig = new ProducerConfig
         {
-            BootstrapServers = "localhost:19092,localhost:29092,localhost:39092"
+            BootstrapServers = KafkaServers
         };
         _consumerConfig = new ConsumerConfig
         {
-            BootstrapServers = "localhost:19092,localhost:29092,localhost:39092",
-            GroupId = "KafkaPlugin",
+            BootstrapServers = KafkaServers,
+            GroupId = GroupId,
             AutoOffsetReset = AutoOffsetReset.Earliest
         };
         _schemaRegistryConfig = new SchemaRegistryConfig
         {
-            Url = "localhost:8081"
+            Url = SchemaRegistry
         };
         _avroSerializerConfig = new AvroSerializerConfig
         {
@@ -131,8 +135,8 @@ public class KafkaService : IKafkaPluginService
                 var leak = new LeakSensorData()
                 {
                     DataRawId = Int32.Parse(l.DataRaw_id),
-                    DCreated = DateTime.ParseExact(l.DCreated, _dateFormat, null),
-                    DReported = DateTime.ParseExact(l.DReported, _dateFormat, null),
+                    DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                    DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
                     DLifeTimeUseCount =  Int32.Parse(l.DLifeTimeUseCount),
                     LeakLevelId =  Int32.Parse(l.LeakLevel_id),
                     SensorId =  Int32.Parse(l.Sensor_id),
