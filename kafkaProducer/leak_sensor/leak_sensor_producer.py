@@ -20,13 +20,13 @@ for line in file_data:
         })
 
 producer = KafkaProducer(
-    bootstrap_servers='192.168.1.71:9092',
+    bootstrap_servers='0.0.0.0:8081',
     value_serializer=lambda v: json.dumps(v).encode('ascii')
 )
 
 while(True):
     try:
-        producer.send('test',value=data[random.randint(1,len(data))])
+        producer.send('leak',value=data[random.randint(1,len(data))])
         producer.flush()
         time.sleep(1)
     except:

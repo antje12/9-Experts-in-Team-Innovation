@@ -19,7 +19,7 @@ for line in file_data:
         })
 
 producer = KafkaProducer(
-    bootstrap_servers='192.168.1.71:9092',
+    bootstrap_servers='192.168.1.71:19092',
     value_serializer=lambda v: json.dumps(v).encode('ascii')
 )
 

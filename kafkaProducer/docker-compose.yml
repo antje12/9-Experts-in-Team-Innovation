@@ -1,0 +1,11 @@
+version: "3"
+services:
+  leak-sensor:
+    container_name: leak-sensor
+    build: ./leak_sensor
+
+
+  # shower-sensor:
+  #   container_name: shower-sensor
+  #   build: ./shower_sensor
+  #   env_file: ./kafkaProducer/producer.env
