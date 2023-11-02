@@ -5,10 +5,10 @@ import random
 
 producer_config = {
     "bootstrap.servers":"kafka-1:9092",
-    "schema.registry.url":"http://schema-registry:8081"
+    "schema.registry.url":"http://localhost:8081"
 }
 
-Producer = AvroProducer(producer_config, default_value_schema=avro.load("./leak.avsc"))
+Producer = AvroProducer(producer_config, default_value_schema=avro.load("../../Kafka/Avro/leak.avsc"))
 
 data = []
 file_data = open("./Aguardio Leak Sensor Data.csv") 

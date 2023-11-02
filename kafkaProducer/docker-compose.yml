@@ -3,9 +3,17 @@ services:
   leak-sensor:
     container_name: leak-sensor
     build: ./leak_sensor
+    networks:
+      sharednetwork:
 
 
-  # shower-sensor:
-  #   container_name: shower-sensor
-  #   build: ./shower_sensor
-  #   env_file: ./kafkaProducer/producer.env
+  shower-sensor:
+    container_name: shower-sensor
+    build: ./shower_sensor
+    networks:
+      sharednetwork:
+
+
+networks:
+  sharednetwork:
+    name: "sharednetwork"

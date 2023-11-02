@@ -1,7 +1,15 @@
-from kafka import KafkaProducer
-import json
+from confluent_kafka.avro import AvroProducer
+from confluent_kafka import avro 
 import time
 import random
+
+producer_config = {
+    "bootstrap.servers":"kafka-1:9092",
+    "schema.registry.url":"http://schema-registry:8081"
+}
+
+Producer = AvroProducer(producer_config, default_value_schema=avro.load("./shower.avsc"))
+
 
 data = []
 file_data = open("./Aguardio Shower Sensor Data.csv")
@@ -18,19 +26,16 @@ for line in file_data:
         "DBattery": str[7]
         })
 
-producer = KafkaProducer(
-    bootstrap_servers='192.168.1.71:19092',
-    value_serializer=lambda v: json.dumps(v).encode('ascii')
-)
 
 while(True):
     try:
-        producer.send('test',value=data[random.randint(1,len(data))])
-        producer.flush()
+
+        Producer.produce(topic  = "shower", 
+        value = data[random.randint(1,len(data))]
+        )
+
+        Producer.flush()
         time.sleep(1)
-    except:
-        print("something went wrong")
+    except Exception as error:
+        print("something went wrong: ", error)
         break
-
-
-producer.flush()
