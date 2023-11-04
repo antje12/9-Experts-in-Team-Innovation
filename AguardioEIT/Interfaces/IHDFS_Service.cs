@@ -1,7 +1,13 @@
+using Common.Models;
+
 namespace Interfaces;
 
 public interface IHDFS_Service
 {
-    Task GetFile(string name);
-    Task SaveFile(string name);
+    Task CreateLeakSensorTableAsync();
+    Task CreateShowerSensorTableAsync();
+    Task InsertLeakSensorDataAsync(LeakSensorDataSimple data);
+    Task InsertShowerSensorDataAsync(ShowerSensorDataSimple data);
+    Task<List<LeakSensorDataSimple>> LoadLeakSensorData();
+    Task<List<ShowerSensorDataSimple>> LoadShowerSensorData();
 }

@@ -14,4 +14,10 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Microsoft.Hadoop.Hive">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.hadoop.hive\0.12.5126.42915\lib\net40\Microsoft.Hadoop.Hive.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>
