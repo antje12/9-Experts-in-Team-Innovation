@@ -1,37 +1,44 @@
-using System.Reflection.PortableExecutable;
+using System.Data.Odbc;
 using Common.Models;
 using Interfaces;
-using Microsoft.Hadoop.Hive;
+
 
 namespace HDFS_Plugin;
 
 public class HDFS_Service : IHDFS_Service
 {
-    // private  HiveConnection? _hiveConnection;
-    private readonly Lazy<HiveConnection> _hiveConnection;
-    private HiveConnection HiveConnection => _hiveConnection.Value;
+    private readonly Lazy<OdbcConnection> _odbcConnection;
+    private OdbcConnection OdbcConnection => _odbcConnection.Value;
+
 
     public HDFS_Service()
     {
-        _hiveConnection = new Lazy<HiveConnection>(() =>
+        _odbcConnection = new Lazy<OdbcConnection>(() =>
         {
-            Uri hiveServerUri = new Uri("thrift://hive-server:10000");
-            string username = ""; // Replace with your username
-            string password = ""; // Replace with your password
-            return new HiveConnection(hiveServerUri, username, password);
+            string connectionString = "DSN=hivedsn";
+            return new OdbcConnection(connectionString);
         });
     }
-    // private HiveConnection HiveConnection
-    // {
-    //     Uri hiveServerUri = new Uri("thrift://hive-server:10000");
-    //     string username = ""; 
-    //     string password = "";
-    //
-    //     if (_hiveConnection == null) _hiveConnection = new HiveConnection(hiveServerUri, username, password);
-    //
-    //     return _hiveConnection;
-    // }
-
+    
+    private async Task ExecuteQueryAsync(string queryString)
+    {
+        try
+        {
+            await OdbcConnection.OpenAsync();
+            using (var command = new OdbcCommand(queryString, OdbcConnection))
+            {
+                await command.ExecuteNonQueryAsync();
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            await OdbcConnection.CloseAsync();
+        }
+    }
     public async Task CreateLeakSensorTableAsync()
     {
         var hiveQuery = @"CREATE TABLE IF NOT EXISTS leak_sensor_data (
@@ -47,14 +54,7 @@ public class HDFS_Service : IHDFS_Service
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ','
                           STORED AS TEXTFILE;";
-        try
-        {
-            await HiveConnection.ExecuteHiveQuery(hiveQuery);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        await ExecuteQueryAsync(hiveQuery);
     }
 
     public async Task CreateShowerSensorTableAsync()
@@ -72,15 +72,7 @@ public class HDFS_Service : IHDFS_Service
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ';'
                           STORED AS TEXTFILE;";
-
-        try
-        {
-            await HiveConnection.ExecuteHiveQuery(hiveQuery);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        await ExecuteQueryAsync(hiveQuery);
     }
 
     public async Task InsertLeakSensorDataAsync(LeakSensorDataSimple data)
@@ -88,15 +80,7 @@ public class HDFS_Service : IHDFS_Service
         var insertQuery = $@"INSERT INTO TABLE leak_sensor_data
                              VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.DLifeTimeUseCount},
                                      {data.LeakLevelId}, {data.SensorId}, {data.DTemperatureOut}, {data.DTemperatureIn});";
-
-        try
-        {
-            await HiveConnection.ExecuteHiveQuery(insertQuery);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+        await ExecuteQueryAsync(insertQuery);
     }
 
     public async Task InsertShowerSensorDataAsync(ShowerSensorDataSimple data)
@@ -104,14 +88,7 @@ public class HDFS_Service : IHDFS_Service
         var insertQuery = $@"INSERT INTO TABLE shower_sensor_data
                              VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.SensorId},
                                      '{data.DShowerState}', {data.DTemperature}, {data.DHumidity}, {data.DBattery});";
-        try
-        {
-            await HiveConnection.ExecuteHiveQuery(insertQuery);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-        }
+        await ExecuteQueryAsync(insertQuery);
     }
 
     public async Task<List<LeakSensorDataSimple>> LoadLeakSensorData()
@@ -121,29 +98,74 @@ public class HDFS_Service : IHDFS_Service
 
         try
         {
-            var resultSet = await HiveConnection.ExecuteHiveQuery<LeakSensorDataSimple>(selectQuery);
-            leakSensorDataList = resultSet.ToList();
+            await OdbcConnection.OpenAsync();
+            using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    var data = new LeakSensorDataSimple
+                    {
+                        DataRawId = reader.GetInt32(reader.GetOrdinal("DataRaw_id")),
+                        DCreated = reader.GetString(reader.GetOrdinal("DCreated")),
+                        DReported = reader.GetString(reader.GetOrdinal("DReported")),
+                        DLifeTimeUseCount = reader.GetInt32(reader.GetOrdinal("DLifeTimeUseCount")),
+                        LeakLevelId = reader.GetInt32(reader.GetOrdinal("LeakLevel_id")),
+                        SensorId = reader.GetInt32(reader.GetOrdinal("Sensor_id")),
+                        DTemperatureOut = reader.GetFloat(reader.GetOrdinal("DTemperatureOut")),
+                        DTemperatureIn = reader.GetFloat(reader.GetOrdinal("DTemperatureIn"))
+                    };
+                    leakSensorDataList.Add(data);
+                }
+            }
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
+        }
+        finally
+        {
+            await OdbcConnection.CloseAsync();
         }
         return leakSensorDataList;
     }
-
     public async Task<List<ShowerSensorDataSimple>> LoadShowerSensorData()
     {
-        var selectQuery = "SELECT * FROM shower_sensor_data;";
         var showerSensorDataList = new List<ShowerSensorDataSimple>();
+
+        string selectQuery = "SELECT * FROM shower_sensor_data;";
 
         try
         {
-            var resultSet = await HiveConnection.ExecuteHiveQuery<ShowerSensorDataSimple>(selectQuery);
-            showerSensorDataList = resultSet.ToList();
+            await OdbcConnection.OpenAsync();
+            using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    var data = new ShowerSensorDataSimple
+                    {
+                        // Assuming the reader can map the database fields directly to the properties of ShowerSensorDataSimple
+                        DataRawId = reader.IsDBNull(reader.GetOrdinal("DataRawId")) ? 0 : reader.GetInt32(reader.GetOrdinal("DataRawId")),
+                        DCreated = reader.IsDBNull(reader.GetOrdinal("DCreated")) ? string.Empty : reader.GetString(reader.GetOrdinal("DCreated")),
+                        DReported = reader.IsDBNull(reader.GetOrdinal("DReported")) ? string.Empty : reader.GetString(reader.GetOrdinal("DReported")),
+                        SensorId = reader.IsDBNull(reader.GetOrdinal("SensorId")) ? 0 : reader.GetInt32(reader.GetOrdinal("SensorId")),
+                        DShowerState = reader.IsDBNull(reader.GetOrdinal("DShowerState")) ? string.Empty : reader.GetString(reader.GetOrdinal("DShowerState")),
+                        DTemperature = reader.IsDBNull(reader.GetOrdinal("DTemperature")) ? 0f : reader.GetFloat(reader.GetOrdinal("DTemperature")),
+                        DHumidity = reader.IsDBNull(reader.GetOrdinal("DHumidity")) ? 0 : reader.GetInt32(reader.GetOrdinal("DHumidity")),
+                        DBattery = reader.IsDBNull(reader.GetOrdinal("DBattery")) ? 0 : reader.GetInt32(reader.GetOrdinal("DBattery"))
+                    };
+                    showerSensorDataList.Add(data);
+                }
+            }
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine($"Error loading shower sensor data: {e.Message}");
+        }
+        finally
+        {
+            await OdbcConnection.CloseAsync();
         }
         return showerSensorDataList;
     }

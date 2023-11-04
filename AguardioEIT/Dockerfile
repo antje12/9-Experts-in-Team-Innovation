@@ -3,6 +3,25 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+# Install dependencies for ODBC
+RUN apt-get update && apt-get install -y \
+  sasl2-bin \
+  libsasl2-modules \
+  unixodbc \
+  alien \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
+
+# Copy the ODBC RPM, convert it to DEB and install it
+COPY ./ClouderaHiveODBC-2.6.11.1011-1.x86_64.rpm /tmp/
+RUN alien -i /tmp/ClouderaHiveODBC-2.6.11.1011-1.x86_64.rpm && \
+  rm -f /tmp/ClouderaHiveODBC-2.6.11.1011-1.x86_64.rpm
+
+# Copy ODBC configuration files
+COPY ./odbc.ini /etc/odbc.ini
+COPY ./odbcinst.ini /etc/odbcinst.ini
+
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 
