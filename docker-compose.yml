@@ -22,10 +22,13 @@ services:
     command: ["hdfs", "datanode"]
     env_file:
       - ./HDFS/config
+    environment:
+      SERVICE_PRECONDITION: "namenode:9870"
     volumes:
       - ./datanode_data:/hadoop/dfs/data
     networks:
       sharednetwork:
+    
   
   #HDFS
   resourcemanager:
@@ -64,6 +67,8 @@ services:
     environment:
       SERVICE_PRECONDITION: "hive-metastore:9083"
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
+    ports:
+      - 10000:10000
     networks:
       sharednetwork:
 
