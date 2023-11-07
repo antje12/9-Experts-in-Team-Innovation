@@ -38,8 +38,24 @@ namespace HDFS_Plugin
     [HttpGet("LoadLeakSensorData")]
     public async Task<IActionResult> LoadLeakSensorData()
     {
-      var data = await _hdfsService.LoadLeakSensorData();
+      var data = await _hdfsService.LoadLeakSensorDataAsync();
       return Ok(data);
+    }
+
+    [HttpGet("CreateLeakSensorTable")]
+    public async Task<IActionResult> CreateTableLeakSensor()
+    {
+      await _hdfsService.CreateLeakSensorTableAsync();
+
+      return Ok();
+    }
+
+    [HttpGet("CreateShowerSensorTable")]
+    public async Task<IActionResult> CreateTableShowerSensor()
+    {
+      await _hdfsService.CreateShowerSensorTableAsync();
+
+      return Ok();
     }
 
     [HttpPost("InsertShowerSensorData")]
@@ -65,7 +81,7 @@ namespace HDFS_Plugin
     [HttpGet("LoadShowerSensorData")]
     public async Task<IActionResult> LoadShowerSensorData()
     {
-      var data = await _hdfsService.LoadShowerSensorData();
+      var data = await _hdfsService.LoadShowerSensorDataAsync();
       return Ok(data);
     }
   }
