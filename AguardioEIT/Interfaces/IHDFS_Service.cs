@@ -11,4 +11,9 @@ public interface IHDFS_Service
   Task InsertShowerSensorDataAsync(List<ShowerSensorDataSimple> data);
   Task<List<LeakSensorDataSimple>> LoadAllLeakSensorDataAsync();
   Task<List<ShowerSensorDataSimple>> LoadAllShowerSensorDataAsync();
+  Task<List<LeakSensorDataSimple>> LoadLeakSensorDataBySensorIdAsync(int sensorId);
+  Task<List<ShowerSensorDataSimple>> LoadShowerSensorDataBySensorIdAsync(int sensorId);
+  Task<LeakSensorDataSimple> LoadLeakSensorDataByDataRawIdAsync(int dataRawId);
+  Task<ShowerSensorDataSimple> LoadShowerSensorDataByDataRawIdAsync(int dataRawId);
+
 }

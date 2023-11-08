@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
+using System.Text;
 using System.Threading.Tasks;
 using Common.Models;
 using Interfaces;
@@ -59,7 +60,7 @@ namespace HDFS_Plugin
                           FIELDS TERMINATED BY ','
                           STORED AS TEXTFILE;";
       await ExecuteQueryAsync(hiveLeakQuery);
-      
+
       var hiveShowerQuery = @"CREATE TABLE IF NOT EXISTS shower_sensor_data (
                             datarawid INT,
                             dcreated STRING,
@@ -74,7 +75,7 @@ namespace HDFS_Plugin
                           FIELDS TERMINATED BY ';'
                           STORED AS TEXTFILE;";
       await ExecuteQueryAsync(hiveShowerQuery);
-      
+
       await OdbcConnection.CloseAsync();
     }
 
@@ -87,18 +88,20 @@ namespace HDFS_Plugin
       await ExecuteQueryAsync(insertQuery);
       await OdbcConnection.CloseAsync();
     }
-    
+
     public async Task InsertLeakSensorDataAsync(List<LeakSensorDataSimple> data)
     {
       await OdbcConnection.OpenAsync();
-      for (int i = 0; i < data.Count; i++)
+      var insertCommandText = new StringBuilder("INSERT INTO leak_sensor_data VALUES ");
+      var insertValues = new List<string>();
+      foreach (var sensorData in data)
       {
-        var sensorData = data.ElementAt(i);
-        var insertQuery = $@"INSERT INTO leak_sensor_data
-                                   VALUES ({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.DLifeTimeUseCount},
-                                           {sensorData.LeakLevelId}, {sensorData.SensorId}, {sensorData.DTemperatureOut}, {sensorData.DTemperatureIn});";
-        await ExecuteQueryAsync(insertQuery);
+        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.DLifeTimeUseCount}, {sensorData.LeakLevelId}, {sensorData.SensorId}, {sensorData.DTemperatureOut}, {sensorData.DTemperatureIn})");
       }
+      insertCommandText.Append(string.Join(",", insertValues));
+      insertCommandText.Append(";");
+
+      await ExecuteQueryAsync(insertCommandText.ToString());
       await OdbcConnection.CloseAsync();
     }
 
@@ -114,14 +117,17 @@ namespace HDFS_Plugin
     public async Task InsertShowerSensorDataAsync(List<ShowerSensorDataSimple> data)
     {
       await OdbcConnection.OpenAsync();
-      for (int i = 0; i < data.Count; i++)
+      var insertCommandText = new StringBuilder("INSERT INTO shower_sensor_data VALUES ");
+
+      var insertValues = new List<string>();
+      foreach (var sensorData in data)
       {
-        var sensorData = data.ElementAt(i);
-        var insertQuery = $@"INSERT INTO shower_sensor_data
-                                   VALUES ({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.SensorId},
-                                           '{sensorData.DShowerState}', {sensorData.DTemperature}, {sensorData.DHumidity}, {sensorData.DBattery});";
-        await ExecuteQueryAsync(insertQuery);
+        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.SensorId}, '{sensorData.DShowerState}', {sensorData.DTemperature}, {sensorData.DHumidity}, {sensorData.DBattery})");
       }
+      insertCommandText.Append(string.Join(",", insertValues));
+      insertCommandText.Append(";");
+
+      await ExecuteQueryAsync(insertCommandText.ToString());
       await OdbcConnection.CloseAsync();
     }
 
@@ -148,14 +154,6 @@ namespace HDFS_Plugin
               SensorId = reader.GetInt32(5),
               DTemperatureOut = reader.GetFloat(6),
               DTemperatureIn = reader.GetFloat(7)
-              // DataRawId = reader.GetInt32(reader.GetOrdinal("dataraw_id")),
-              // DCreated = reader.GetString(reader.GetOrdinal("dcreated")),
-              // DReported = reader.GetString(reader.GetOrdinal("dreported")),
-              // DLifeTimeUseCount = reader.GetInt32(reader.GetOrdinal("dlifetimeusecount")),
-              // LeakLevelId = reader.GetInt32(reader.GetOrdinal("leaklevel_id")),
-              // SensorId = reader.GetInt32(reader.GetOrdinal("sensor_id")),
-              // DTemperatureOut = reader.GetFloat(reader.GetOrdinal("dtemperatureout")),
-              // DTemperatureIn = reader.GetFloat(reader.GetOrdinal("dtemperaturein"))
             };
             leakSensorDataList.Add(data);
           }
@@ -171,6 +169,91 @@ namespace HDFS_Plugin
         await OdbcConnection.CloseAsync();
       }
       return leakSensorDataList;
+    }
+
+    public async Task<List<LeakSensorDataSimple>> LoadLeakSensorDataBySensorIdAsync(int sensorId)
+    {
+      var selectQuery = $"SELECT dataraw_id, dcreated, dreported, dlifetimeusecount, leaklevel_id, sensor_id, dtemperatureout, dtemperaturein FROM leak_sensor_data WHERE sensor_id = {sensorId};";
+
+      var leakSensorDataList = new List<LeakSensorDataSimple>();
+
+      try
+      {
+        await OdbcConnection.OpenAsync();
+        using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+        {
+          using (var reader = await command.ExecuteReaderAsync())
+          {
+            while (await reader.ReadAsync())
+            {
+              var data = new LeakSensorDataSimple
+              {
+                DataRawId = reader.GetInt32(0),
+                DCreated = reader.GetString(1),
+                DReported = reader.GetString(2),
+                DLifeTimeUseCount = reader.GetInt32(3),
+                LeakLevelId = reader.GetInt32(4),
+                SensorId = reader.GetInt32(5),
+                DTemperatureOut = reader.GetFloat(6),
+                DTemperatureIn = reader.GetFloat(7)
+              };
+              leakSensorDataList.Add(data);
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine($"Error loading leak sensor data for sensor ID {sensorId}: {e.Message}");
+        throw;
+      }
+      finally
+      {
+        await OdbcConnection.CloseAsync();
+      }
+      return leakSensorDataList;
+    }
+
+    public async Task<LeakSensorDataSimple> LoadLeakSensorDataByDataRawIdAsync(int dataRawId)
+    {
+      var selectQuery = $"SELECT dataraw_id, dcreated, dreported, dlifetimeusecount, leaklevel_id, sensor_id, dtemperatureout, dtemperaturein FROM leak_sensor_data WHERE dataraw_id = {dataRawId};";
+      LeakSensorDataSimple data = null;
+
+      try
+      {
+        await OdbcConnection.OpenAsync();
+        using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+        {
+          using (var reader = await command.ExecuteReaderAsync())
+          {
+            if (await reader.ReadAsync())
+            {
+              data = new LeakSensorDataSimple
+              {
+                DataRawId = reader.GetInt32(0),
+                DCreated = reader.GetString(1),
+                DReported = reader.GetString(2),
+                DLifeTimeUseCount = reader.GetInt32(3),
+                LeakLevelId = reader.GetInt32(4),
+                SensorId = reader.GetInt32(5),
+                DTemperatureOut = reader.GetFloat(6),
+                DTemperatureIn = reader.GetFloat(7)
+              };
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine($"Error loading leak sensor data for data ID {dataRawId}: {e.Message}");
+        throw;
+      }
+      finally
+      {
+        await OdbcConnection.CloseAsync();
+      }
+
+      return data;
     }
 
     public async Task<List<ShowerSensorDataSimple>> LoadAllShowerSensorDataAsync()
@@ -212,5 +295,90 @@ namespace HDFS_Plugin
       }
       return showerSensorDataList;
     }
+
+    public async Task<List<ShowerSensorDataSimple>> LoadShowerSensorDataBySensorIdAsync(int sensorId)
+    {
+      var showerSensorDataList = new List<ShowerSensorDataSimple>();
+      string selectQuery = $"SELECT datarawid, dcreated, dreported, sensorid, dshowerstate, dtemperature, dhumidity, dbattery FROM shower_sensor_data WHERE sensorid = {sensorId};";
+
+      try
+      {
+        await OdbcConnection.OpenAsync();
+        using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+        {
+          using (var reader = await command.ExecuteReaderAsync())
+          {
+            while (await reader.ReadAsync())
+            {
+              var data = new ShowerSensorDataSimple
+              {
+                DataRawId = reader.GetInt32(0),
+                DCreated = reader.GetString(1),
+                DReported = reader.GetString(2),
+                SensorId = reader.GetInt32(3),
+                DShowerState = reader.GetString(4),
+                DTemperature = reader.GetFloat(5),
+                DHumidity = reader.GetInt32(6),
+                DBattery = reader.GetInt32(7)
+              };
+              showerSensorDataList.Add(data);
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine($"Error loading shower sensor data for sensor ID {sensorId}: {e.Message}");
+        throw;
+      }
+      finally
+      {
+        await OdbcConnection.CloseAsync();
+      }
+      return showerSensorDataList;
+    }
+
+    public async Task<ShowerSensorDataSimple> LoadShowerSensorDataByDataRawIdAsync(int dataRawId)
+    {
+      ShowerSensorDataSimple data = null;
+      string selectQuery = $"SELECT datarawid, dcreated, dreported, sensorid, dshowerstate, dtemperature, dhumidity, dbattery FROM shower_sensor_data WHERE datarawid = {dataRawId};";
+
+      try
+      {
+        await OdbcConnection.OpenAsync();
+        using (var command = new OdbcCommand(selectQuery, OdbcConnection))
+        {
+          using (var reader = await command.ExecuteReaderAsync())
+          {
+            if (await reader.ReadAsync())
+            {
+              data = new ShowerSensorDataSimple
+              {
+                DataRawId = reader.GetInt32(0),
+                DCreated = reader.GetString(1),
+                DReported = reader.GetString(2),
+                SensorId = reader.GetInt32(3),
+                DShowerState = reader.GetString(4),
+                DTemperature = reader.GetFloat(5),
+                DHumidity = reader.GetInt32(6),
+                DBattery = reader.GetInt32(7)
+              };
+            }
+          }
+        }
+      }
+      catch (Exception e)
+      {
+        Console.WriteLine($"Error loading shower sensor data for data ID {dataRawId}: {e.Message}");
+        throw;
+      }
+      finally
+      {
+        await OdbcConnection.CloseAsync();
+      }
+
+      return data;
+    }
+
   }
 }
