@@ -20,8 +20,6 @@ public class DatabasePlugin : IPlugin
         });
         
         services.AddScoped<MongoDbContext>();
-        services.AddScoped<ISensorDataService<LeakSensorData>, LeakSensorDataService>();
-        services.AddScoped<ISensorDataService<ShowerSensorData>, ShowerSensorDataService>();
         services.AddScoped<ISqlDatabasePluginService, SqlDatabasePluginService>();
         services.AddScoped<IMongoDatabasePluginService, MongoDatabasePluginService>();
         services.AddScoped<ISensorDataRepository, SensorDataRepository>();
