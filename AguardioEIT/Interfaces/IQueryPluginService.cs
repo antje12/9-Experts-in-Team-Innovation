@@ -5,5 +5,5 @@ namespace Interfaces;
 
 public interface IQueryPluginService
 {
-    Task<QueryResponse> GetStoredData(Query query, int queryId);
+    Task<QueryResponse> GetStoredData<T>(Query query, int queryId, SensorType sensorType) where T : SensorData;
 }

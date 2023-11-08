@@ -1,4 +1,7 @@
+using Common.Models;
 using DatabasePlugin.Context;
+using DatabasePlugin.Interfaces;
+using DatabasePlugin.Repositories;
 using Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,9 +18,12 @@ public class DatabasePlugin : IPlugin
         {
             options.UseNpgsql(sqlConnectionString);
         });
-
+        
         services.AddScoped<MongoDbContext>();
-        services.AddScoped<ILeakSensorSqlDatabasePluginService, LeakSensorSqlDatabasePluginService>();
-        services.AddScoped<ILeakSensorMongoDatabasePluginService, LeakSensorMongoDatabasePluginService>();
+        services.AddScoped<ISensorDataService<LeakSensorData>, LeakSensorDataService>();
+        services.AddScoped<ISensorDataService<ShowerSensorData>, ShowerSensorDataService>();
+        services.AddScoped<ISqlDatabasePluginService, SqlDatabasePluginService>();
+        services.AddScoped<IMongoDatabasePluginService, MongoDatabasePluginService>();
+        services.AddScoped<ISensorDataRepository, SensorDataRepository>();
     }
 }

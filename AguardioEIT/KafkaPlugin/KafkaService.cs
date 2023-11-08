@@ -13,8 +13,8 @@ public class KafkaService : IKafkaPluginService
 {
     //https://www.codeproject.com/Articles/5321450/ASP-NET-Core-Web-API-Plugin-Controllers-and-Servic
     //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
-    private ILeakSensorSqlDatabasePluginService _sql;
-    private ILeakSensorMongoDatabasePluginService _mongo;
+    private ISqlDatabasePluginService _sql;
+    private IMongoDatabasePluginService _mongo;
     private CancellationTokenSource _cancellationTokenSource;
     private readonly ProducerConfig _producerConfig;
     private readonly ConsumerConfig _consumerConfig;
@@ -29,8 +29,8 @@ public class KafkaService : IKafkaPluginService
     private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
 
     public KafkaService(
-        ILeakSensorSqlDatabasePluginService sql,
-        ILeakSensorMongoDatabasePluginService mongo
+        ISqlDatabasePluginService sql,
+        IMongoDatabasePluginService mongo
     )
     {
         this._sql = sql;

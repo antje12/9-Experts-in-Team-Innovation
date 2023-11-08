@@ -17,15 +17,26 @@ public class QueryPluginController : ControllerBase
     }
 
     [HttpGet("PerformQuery")]
-    public async Task<ActionResult> MongoDbGetBySensorId(Query query, int queryId)
+    public async Task<ActionResult> MongoDbGetBySensorId(Query query, int queryId, SensorType sensorType)
     {
         try
         {
-            QueryResponse queryResponse = await _queryPluginService.GetStoredData(query, queryId);
+            QueryResponse queryResponse = sensorType switch
+            {
+                SensorType.LeakSensor => await GetStoredDataAsync<LeakSensorData>(query, queryId, sensorType),
+                SensorType.ShowerSensor => await GetStoredDataAsync<ShowerSensorData>(query, queryId, sensorType),
+                _ => throw new ArgumentException("Invalid sensor type.")
+            };
+            
             return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
         }
+    }
+
+    private async Task<QueryResponse> GetStoredDataAsync<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
+    {
+        return await _queryPluginService.GetStoredData<T>(query, queryId, sensorType);
     }
 }

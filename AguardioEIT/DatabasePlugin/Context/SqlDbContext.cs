@@ -6,7 +6,8 @@ namespace DatabasePlugin.Context;
 public class SqlDbContext : DbContext
 {
     public DbSet<LeakSensorData> LeakSensorData { get; set; }
-    
+    public DbSet<ShowerSensorData> ShowerSensorData { get; set; }
+
     public SqlDbContext(DbContextOptions<SqlDbContext> options)
         : base(options)
     {

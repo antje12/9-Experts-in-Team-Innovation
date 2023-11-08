@@ -8,37 +8,38 @@ namespace QueryPlugin;
 public class QueryPluginService : IQueryPluginService
 {
     private readonly IRedisPluginService _redisService;
-    private readonly ILeakSensorMongoDatabasePluginService _leakSensorMongoDatabasePluginService;
-    private readonly ILeakSensorSqlDatabasePluginService _leakSensorSqlDatabasePluginService;
+    private readonly IMongoDatabasePluginService _mongoDatabasePluginService;
+    private readonly ISqlDatabasePluginService _sqlDatabasePluginService;
 
     public QueryPluginService(
         IRedisPluginService redisService,
-        ILeakSensorMongoDatabasePluginService leakSensorMongoDatabasePluginService,
-        ILeakSensorSqlDatabasePluginService leakSensorSqlDatabasePluginService
+        IMongoDatabasePluginService mongoDatabasePluginService,
+        ISqlDatabasePluginService sqlDatabasePluginService
     )
     {
         _redisService = redisService;
-        _leakSensorMongoDatabasePluginService = leakSensorMongoDatabasePluginService;
-        _leakSensorSqlDatabasePluginService = leakSensorSqlDatabasePluginService;
+        _mongoDatabasePluginService = mongoDatabasePluginService;
+        _sqlDatabasePluginService = sqlDatabasePluginService;
     }
-    
+
     /// <summary>
     /// Performs a lookup in the cache for the given cacheKey. If the data is found, it is returned.
     /// Else the data is fetched from the database, cached and returned.
     /// </summary>
     /// <param name="query">The query to be performed if no data is found in the cache</param>
     /// <param name="queryId">The query to use in a database lookup. Can be a dataId or a sensorId</param>
+    /// <param name="sensorType">The <see cref="SensorType"/> that should be queried</param>
     /// <returns></returns>
-    public async Task<QueryResponse> GetStoredData(Query query, int queryId)
+    public async Task<QueryResponse> GetStoredData<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
     {
         try
         {
             // Throws KeyNotFoundException no data is found
-            return await FetchDataFromCache(query, queryId);
+            return await FetchDataFromCache<T>(query, queryId);
         }
         catch (KeyNotFoundException)
         {
-            return await FetchDataFromDb(query, queryId);
+            return await FetchDataFromDb<T>(query, queryId, sensorType);
         }
         catch (Exception e)
         {
@@ -46,40 +47,40 @@ public class QueryPluginService : IQueryPluginService
             
             return new QueryResponse
             {
-                fromCache = false,
-                data = null
+                FromCache = false,
+                Data = null
             };
         }
     }
 
-    private async Task<QueryResponse> FetchDataFromCache(Query query, int queryId)
+    private async Task<QueryResponse> FetchDataFromCache<T>(Query query, int queryId) where T : SensorData
     {
-        string cacheKey = GetCacheKey(query, queryId);
+        string cacheKey = GetCacheKey<T>(query, queryId);
         string cachedData = await _redisService.GetAsync(cacheKey);
 
         IEnumerable<LeakSensorData>? data = JsonConvert.DeserializeObject<List<LeakSensorData>>(cachedData);
         
         return new QueryResponse
         {
-            fromCache = true,
-            data = data
+            FromCache = true,
+            Data = data
         };
     }
 
-    private async Task<QueryResponse> FetchDataFromDb(Query query, int queryId)
+    private async Task<QueryResponse> FetchDataFromDb<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
     {
-        IEnumerable<LeakSensorData>? data = query switch
+        IEnumerable<SensorData> data = query switch
         {
-            Query.SqlGetByDataId => new List<LeakSensorData>
+            Query.SqlGetByDataId => new List<SensorData?>
             {
-                await _leakSensorSqlDatabasePluginService.GetSensorDataByIdAsync(queryId)
-            },
-            Query.SqlGetBySensorId => await _leakSensorSqlDatabasePluginService.GetSensorDataBySensorIdAsync(queryId),
-            Query.MongoDbGetByDataId => new List<LeakSensorData>
+                await _sqlDatabasePluginService.GetSensorDataByIdAsync<T>(queryId, sensorType)
+            }!,
+            Query.SqlGetBySensorId => await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<T>(queryId, sensorType),
+            Query.MongoDbGetByDataId => new List<SensorData?>
             {
-                await _leakSensorMongoDatabasePluginService.GetSensorDataByIdAsync(queryId)
-            },
-            Query.MongoDbGetBySensorId => await _leakSensorMongoDatabasePluginService.GetSensorDataBySensorIdAsync(queryId),
+                await _mongoDatabasePluginService.GetSensorDataByIdAsync<T>(queryId)
+            }!,
+            Query.MongoDbGetBySensorId => await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<T>(queryId),
             _ => throw new ArgumentOutOfRangeException(nameof(query), query, null)
         };
 
@@ -87,24 +88,24 @@ public class QueryPluginService : IQueryPluginService
         
         // Set data in cache with 30 minutes expiration
         string serializedData = JsonConvert.SerializeObject(data);
-        string cacheKey = GetCacheKey(query, queryId);
+        string cacheKey = GetCacheKey<T>(query, queryId);
         await _redisService.SetAsync(cacheKey, serializedData);
         
         return new QueryResponse
         {
-            fromCache = false,
-            data = data
+            FromCache = false,
+            Data = data
         };
     }
-    
-    private static string GetCacheKey(Query query, int queryId)
+
+    private static string GetCacheKey<T>(Query query, int queryId) where T : SensorData
     {
         string cacheKey = query switch
         {
-            Query.SqlGetByDataId => $"Sql:DataId={queryId}",
-            Query.SqlGetBySensorId => $"Sql:SensorId={queryId}",
-            Query.MongoDbGetByDataId => $"MongoDb:DataId={queryId}",
-            Query.MongoDbGetBySensorId => $"MongoDb:SensorId={queryId}",
+            Query.SqlGetByDataId => $"Sql:{typeof(T).Name}:DataId={queryId}",
+            Query.SqlGetBySensorId => $"Sql:{typeof(T).Name}:SensorId={queryId}",
+            Query.MongoDbGetByDataId => $"MongoDb:{typeof(T).Name}:DataId={queryId}",
+            Query.MongoDbGetBySensorId => $"MongoDb:{typeof(T).Name}:SensorId={queryId}",
             _ => throw new ArgumentOutOfRangeException(nameof(query), query, null)
         };
         return cacheKey;

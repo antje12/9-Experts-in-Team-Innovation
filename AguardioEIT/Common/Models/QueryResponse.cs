@@ -2,6 +2,6 @@ namespace Common.Models;
 
 public class QueryResponse
 {
-    public bool fromCache { get; set; }
-    public IEnumerable<LeakSensorData>? data { get; set; }
+    public bool FromCache { get; set; }
+    public IEnumerable<SensorData?>? Data { get; set; }
 }
