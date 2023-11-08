@@ -25,7 +25,7 @@ namespace HDFS_Plugin
     {
       try
       {
-        await OdbcConnection.OpenAsync();
+        // await OdbcConnection.OpenAsync(); // Remember to remove
         using (var command = new OdbcCommand(queryString, OdbcConnection))
         {
           await command.ExecuteNonQueryAsync();
@@ -36,15 +36,16 @@ namespace HDFS_Plugin
         Console.WriteLine(e.Message);
         throw;
       }
-      finally
-      {
-        await OdbcConnection.CloseAsync();
-      }
+      // finally
+      // {
+      //   await OdbcConnection.CloseAsync(); // Remember to remove
+      // }
     }
 
-    public async Task CreateLeakSensorTableAsync()
+    public async Task CreateHiveTables()
     {
-      var hiveQuery = @"CREATE TABLE IF NOT EXISTS leak_sensor_data (
+      await OdbcConnection.OpenAsync();
+      var hiveLeakQuery = @"CREATE TABLE IF NOT EXISTS leak_sensor_data (
                             dataraw_id INT,
                             dcreated STRING,
                             dreported STRING,
@@ -57,12 +58,9 @@ namespace HDFS_Plugin
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ','
                           STORED AS TEXTFILE;";
-      await ExecuteQueryAsync(hiveQuery);
-    }
-
-    public async Task CreateShowerSensorTableAsync()
-    {
-      var hiveQuery = @"CREATE TABLE IF NOT EXISTS shower_sensor_data (
+      await ExecuteQueryAsync(hiveLeakQuery);
+      
+      var hiveShowerQuery = @"CREATE TABLE IF NOT EXISTS shower_sensor_data (
                             datarawid INT,
                             dcreated STRING,
                             dreported STRING,
@@ -75,26 +73,59 @@ namespace HDFS_Plugin
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ';'
                           STORED AS TEXTFILE;";
-      await ExecuteQueryAsync(hiveQuery);
+      await ExecuteQueryAsync(hiveShowerQuery);
+      
+      await OdbcConnection.CloseAsync();
     }
 
     public async Task InsertLeakSensorDataAsync(LeakSensorDataSimple data)
     {
+      await OdbcConnection.OpenAsync();
       var insertQuery = $@"INSERT INTO leak_sensor_data
                                  VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.DLifeTimeUseCount},
                                          {data.LeakLevelId}, {data.SensorId}, {data.DTemperatureOut}, {data.DTemperatureIn});";
       await ExecuteQueryAsync(insertQuery);
+      await OdbcConnection.CloseAsync();
+    }
+    
+    public async Task InsertLeakSensorDataAsync(List<LeakSensorDataSimple> data)
+    {
+      await OdbcConnection.OpenAsync();
+      for (int i = 0; i < data.Count; i++)
+      {
+        var sensorData = data.ElementAt(i);
+        var insertQuery = $@"INSERT INTO leak_sensor_data
+                                   VALUES ({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.DLifeTimeUseCount},
+                                           {sensorData.LeakLevelId}, {sensorData.SensorId}, {sensorData.DTemperatureOut}, {sensorData.DTemperatureIn});";
+        await ExecuteQueryAsync(insertQuery);
+      }
+      await OdbcConnection.CloseAsync();
     }
 
     public async Task InsertShowerSensorDataAsync(ShowerSensorDataSimple data)
     {
+      await OdbcConnection.OpenAsync();
       var insertQuery = $@"INSERT INTO shower_sensor_data
                                  VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.SensorId},
                                          '{data.DShowerState}', {data.DTemperature}, {data.DHumidity}, {data.DBattery});";
       await ExecuteQueryAsync(insertQuery);
+      await OdbcConnection.CloseAsync();
+    }
+    public async Task InsertShowerSensorDataAsync(List<ShowerSensorDataSimple> data)
+    {
+      await OdbcConnection.OpenAsync();
+      for (int i = 0; i < data.Count; i++)
+      {
+        var sensorData = data.ElementAt(i);
+        var insertQuery = $@"INSERT INTO shower_sensor_data
+                                   VALUES ({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.SensorId},
+                                           '{sensorData.DShowerState}', {sensorData.DTemperature}, {sensorData.DHumidity}, {sensorData.DBattery});";
+        await ExecuteQueryAsync(insertQuery);
+      }
+      await OdbcConnection.CloseAsync();
     }
 
-    public async Task<List<LeakSensorDataSimple>> LoadLeakSensorDataAsync()
+    public async Task<List<LeakSensorDataSimple>> LoadAllLeakSensorDataAsync()
     {
       var selectQuery = "SELECT * FROM leak_sensor_data;";
       var leakSensorDataList = new List<LeakSensorDataSimple>();
@@ -142,7 +173,7 @@ namespace HDFS_Plugin
       return leakSensorDataList;
     }
 
-    public async Task<List<ShowerSensorDataSimple>> LoadShowerSensorDataAsync()
+    public async Task<List<ShowerSensorDataSimple>> LoadAllShowerSensorDataAsync()
     {
       var showerSensorDataList = new List<ShowerSensorDataSimple>();
       string selectQuery = "SELECT * FROM shower_sensor_data;";
