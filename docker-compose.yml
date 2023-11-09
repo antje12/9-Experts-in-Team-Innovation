@@ -229,6 +229,14 @@ services:
       - mongo.three.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+
+  leak-sensor:
+    container_name: leak-sensor
+    build: ./kafkaProducer/leak_sensor
+
+  shower-sensor:
+    container_name: shower-sensor
+    build: ./kafkaProducer/shower_sensor
  
 volumes:
   postgres_data:
