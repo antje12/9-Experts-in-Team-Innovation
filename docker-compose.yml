@@ -227,6 +227,19 @@ services:
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
     networks:
       sharednetwork:
+
+  leak-sensor:
+    container_name: leak-sensor
+    build: ./kafkaProducer/leak_sensor
+    networks:
+      sharednetwork:
+
+
+  shower-sensor:
+    container_name: shower-sensor
+    build: ./kafkaProducer/shower_sensor
+    networks:
+      sharednetwork:
  
 volumes:
   postgres_data:
