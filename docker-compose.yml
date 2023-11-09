@@ -135,16 +135,38 @@ services:
     ports:
       - "50070:50070"
 
-  datanode:
+  datanode1:
     image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
     volumes:
-      - datanode:/hadoop/dfs/data
+      - datanode1:/hadoop/dfs/data
     env_file:
       - ./hadoop-hive.env
     environment:
       SERVICE_PRECONDITION: "namenode:50070"
     ports:
       - "50075:50075"
+
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode2:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    ports:
+      - "50076:50075"
+
+  datanode3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode3:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    ports:
+      - "50077:50075"
 
   hive-server:
     image: bde2020/hive:2.3.2-postgresql-metastore
@@ -162,7 +184,7 @@ services:
       - ./hadoop-hive.env
     command: /opt/hive/bin/hive --service metastore
     environment:
-      SERVICE_PRECONDITION: "namenode:50070 datanode:50075 hive-metastore-postgresql:5432"
+      SERVICE_PRECONDITION: "namenode:50070 datanode1:50075 hive-metastore-postgresql:5432"
     ports:
       - "9083:9083"
 
@@ -256,4 +278,9 @@ volumes:
   mongo.three.vol:
     name: "mongo.three.vol"
   namenode:
-  datanode:
+  datanode1:
+    name: datanode1
+  datanode2:
+    name: datanode2
+  datanode3:
+    name: datanode3
