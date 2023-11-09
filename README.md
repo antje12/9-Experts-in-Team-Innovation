@@ -10,7 +10,7 @@ cd AguardioEIT/DatabasePlugin
 
 Then apply the migrations by running:
 ```
-dotnet ef database updated
+dotnet ef database update
 ```
 
 **_Note:_** To do this, the PostgreSQL service must be running in Docker.
