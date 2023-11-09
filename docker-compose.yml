@@ -168,6 +168,8 @@ services:
 
   hive-metastore-postgresql:
     image: bde2020/hive-metastore-postgresql:2.3.0
+    volumes:
+      - postgres_metastore_hive:/var/lib/postgresql/data
 
   redis-server:
     image: redis
@@ -233,14 +235,20 @@ services:
   leak-sensor:
     container_name: leak-sensor
     build: ./kafkaProducer/leak_sensor
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
 
   shower-sensor:
     container_name: shower-sensor
     build: ./kafkaProducer/shower_sensor
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
  
 volumes:
-  postgres_data:
   postgres_sensor_data:
+  postgres_metastore_hive:
   mongo.one.vol:
     name: "mongo.one.vol"
   mongo.two.vol:
