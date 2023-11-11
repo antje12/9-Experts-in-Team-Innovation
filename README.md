@@ -1,7 +1,7 @@
 # 9-Experts-in-Team-Innovation
 
 ## Overleaf Link
-[Experts in Teams Innovation - Aguardio Group 1] (https://www.overleaf.com/project/654fcf977ff977ae7a506617)
+[Experts in Teams Innovation - Aguardio Group 1](https://www.overleaf.com/project/654fcf977ff977ae7a506617)
 
 ## Applying PostgreSQL Migrations
 In order to use the SQL services in the DatabasePlugin, the tables must be created in the PostgreSQL database.
