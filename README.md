@@ -5,7 +5,7 @@
 
 ## Applying PostgreSQL Migrations
 The easiest way to apply the migrations is to start docker-compose by using one of the
-`startdocker` scripts at the root of the project. They automatically configure both Postgresql and Mongodb 
+`startdocker` scripts at the root of the project. They automatically configure both PostgreSQL and Mongodb 
 after all the containers are up and running.
 
 If you don't use the `startdocker` scripts, follow these instructions:
