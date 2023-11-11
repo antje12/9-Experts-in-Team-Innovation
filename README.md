@@ -4,7 +4,7 @@
 [Experts in Teams Innovation - Aguardio Group 1](https://www.overleaf.com/project/654fcf977ff977ae7a506617)
 
 ## Applying PostgreSQL Migrations
-The easiest way to apply the migrations is to use start docker compose by using one of the
+The easiest way to apply the migrations is to start docker compose by using one of the
 `startdocker` scripts in the root of the project. They automatically configure both postgresql
 mongodb after all the containers are up and running.
 
