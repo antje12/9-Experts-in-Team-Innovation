@@ -19,16 +19,27 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
         _sensorDataRepository = sensorDataRepository ?? throw new ArgumentNullException(nameof(sensorDataRepository));
     }
 
-    public async Task SaveSensorDataAsync<T>(T data, SensorType sensorType) where T : SensorData
+    public async Task SaveSensorDataAsync<T>(IEnumerable<T> data, SensorType sensorType) where T : SensorData
     {
-        await _sensorDataRepository.AddDataAsync(data, sensorType);
-        
-        string cacheKeyDataId = $"SqlDb:{typeof(T).Name}:DataId={data.DataRawId}";
-        string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={data.SensorId}";
-        
-        await _redisPluginService.SetAsync(cacheKeyDataId, JsonConvert.SerializeObject(data));
-        IEnumerable<SensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(data.SensorId, sensorType);
-        await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection));
+        try
+        {
+            IEnumerable<T> sensorData = data.ToList();
+            await _sensorDataRepository.AddDataAsync(sensorData, sensorType);
+            
+            foreach (T d in sensorData)
+            {
+                string cacheKeyDataId = $"SqlDb:{typeof(T).Name}:DataId={d.DataRawId}";
+                await _redisPluginService.SetAsync(cacheKeyDataId, JsonConvert.SerializeObject(data));
+            }
+            
+            string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
+            IEnumerable<SensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
+            await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection));
+        } catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 
     public async Task<SensorData?> GetSensorDataByIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData

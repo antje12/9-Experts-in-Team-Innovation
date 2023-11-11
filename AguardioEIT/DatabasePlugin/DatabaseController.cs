@@ -22,11 +22,12 @@ public class DatabaseController : ControllerBase
     }
     
     [HttpPost("sql/leak-sensor/add")]
-    public async Task<ActionResult> SqlAddLeakSensorData(LeakSensorData data)
+    public async Task<ActionResult> SqlAddLeakSensorData(LeakSensorData data, int repeat = 1)
     {
         try
         {
-            await _sqlDatabasePluginService.SaveSensorDataAsync(data, SensorType.LeakSensor);
+            IEnumerable<LeakSensorData> leakSensorData = GenerateLeakSensorData(repeat, data);
+            await _sqlDatabasePluginService.SaveSensorDataAsync(leakSensorData, SensorType.LeakSensor);
             return Ok();
         } catch (Exception e)
         {
@@ -35,11 +36,12 @@ public class DatabaseController : ControllerBase
     }
     
     [HttpPost("sql/shower-sensor/add")]
-    public async Task<ActionResult> SqlAddShowerSensorData(ShowerSensorData data)
+    public async Task<ActionResult> SqlAddShowerSensorData(ShowerSensorData data, int repeat = 1)
     {
         try
         {
-            await _sqlDatabasePluginService.SaveSensorDataAsync(data, SensorType.ShowerSensor);
+            IEnumerable<ShowerSensorData> showerSensorData = GenerateShowerSensorData(repeat, data);
+            await _sqlDatabasePluginService.SaveSensorDataAsync(showerSensorData, SensorType.ShowerSensor);
             return Ok();
         } catch (Exception e)
         {
@@ -104,11 +106,12 @@ public class DatabaseController : ControllerBase
     }
 
     [HttpPost("mongodb/leak-sensor/add")]
-    public async Task<ActionResult> MongoDbAddLeakSensorData(LeakSensorData data)
+    public async Task<ActionResult> MongoDbAddLeakSensorData(LeakSensorData data, int repeat = 1)
     {
         try
         {
-            await _mongoDatabasePluginService.SaveSensorDataAsync(data);
+            IEnumerable<LeakSensorData> leakSensorData = GenerateLeakSensorData(repeat, data);
+            await _mongoDatabasePluginService.SaveSensorDataAsync(leakSensorData);
             return Ok();
         } catch (Exception e)
         {
@@ -117,11 +120,12 @@ public class DatabaseController : ControllerBase
     }
     
     [HttpPost("mongodb/shower-sensor/add")]
-    public async Task<ActionResult> MongoDbAddShowerSensorData(ShowerSensorData data)
+    public async Task<ActionResult> MongoDbAddShowerSensorData(ShowerSensorData data, int repeat = 1)
     {
         try
         {
-            await _mongoDatabasePluginService.SaveSensorDataAsync(data);
+            IEnumerable<ShowerSensorData> showerSensorData = GenerateShowerSensorData(repeat, data);
+            await _mongoDatabasePluginService.SaveSensorDataAsync(showerSensorData);
             return Ok();
         } catch (Exception e)
         {
@@ -187,5 +191,49 @@ public class DatabaseController : ControllerBase
         {
             return BadRequest(e.Message);
         }
+    }
+
+    private static IEnumerable<LeakSensorData> GenerateLeakSensorData(int count, LeakSensorData template)
+    {
+        List<LeakSensorData> leakSensorDataList = new();
+        
+        for (int i = 0; i < count; i++)
+        {
+            LeakSensorData newData = new()
+            {
+                DCreated = template.DCreated,
+                SensorId = template.SensorId,
+                DReported = template.DReported,
+                DTemperatureIn = template.DTemperatureIn,
+                DTemperatureOut = template.DTemperatureOut,
+                LeakLevelId = template.LeakLevelId,
+                DLifeTimeUseCount = template.DLifeTimeUseCount
+            };
+            leakSensorDataList.Add(newData);
+        }
+        
+        return leakSensorDataList;
+    }
+    
+    private static IEnumerable<ShowerSensorData> GenerateShowerSensorData(int count, ShowerSensorData template)
+    {
+        List<ShowerSensorData> leakSensorDataList = new();
+        
+        for (int i = 0; i < count; i++)
+        {
+            ShowerSensorData newData = new()
+            {
+                DCreated = template.DCreated,
+                SensorId = template.SensorId,
+                DReported = template.DReported,
+                DTemperature = template.DTemperature,
+                DBattery = template.DBattery,
+                DHumidity = template.DHumidity,
+                DShowerState = template.DShowerState
+            };
+            leakSensorDataList.Add(newData);
+        }
+        
+        return leakSensorDataList;
     }
 }

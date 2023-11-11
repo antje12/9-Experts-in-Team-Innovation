@@ -18,15 +18,34 @@ public class SensorDataRepository : ISensorDataRepository
         _showerDbSet = context.Set<ShowerSensorData>();
     }
 
-    public async Task AddDataAsync(SensorData data, SensorType sensorType)
+    public async Task AddDataAsync(IEnumerable<SensorData> data, SensorType sensorType)
     {
+        List<SensorData> sensorData = data.ToList();
+        if (sensorData.Count == 0) throw new ArgumentException("Cannot insert empty list");
         switch (sensorType)
         {
             case SensorType.LeakSensor:
-                await  _leakDbSet.AddAsync((LeakSensorData)data);
+                if (sensorData.Count > 1)
+                {
+                    List<LeakSensorData> leakSensorData = sensorData.ConvertAll(d => (LeakSensorData)d);
+                    Console.WriteLine($"Adding {leakSensorData.Count} leak sensor data to the database.");
+                    await _leakDbSet.AddRangeAsync(leakSensorData);
+                }
+                else
+                {
+                    await  _leakDbSet.AddAsync((LeakSensorData)sensorData.First());
+                }
                 break;
             case SensorType.ShowerSensor:
-                await _showerDbSet.AddAsync((ShowerSensorData)data);
+                if (sensorData.Count > 1)
+                {
+                    List<ShowerSensorData> showerSensorData = sensorData.ConvertAll(d => (ShowerSensorData)d);
+                    await _showerDbSet.AddRangeAsync(showerSensorData);
+                }
+                else
+                {
+                    await  _showerDbSet.AddAsync((ShowerSensorData)sensorData.First());
+                }
                 break;
             default:
                 throw new ArgumentException("Invalid sensor type.");

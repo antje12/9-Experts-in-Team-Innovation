@@ -150,7 +150,7 @@ public class KafkaService : IKafkaPluginService
                         DTemperatureIn = Double.Parse(l.DTemperatureIn)
                     };
                     //await _sql.SaveSensorDataAsync(leak);
-                    await _mongo.SaveSensorDataAsync(leak);
+                    await _mongo.SaveSensorDataAsync(new List<LeakSensorData> { leak });
                 }
                 catch (Exception e)
                 {

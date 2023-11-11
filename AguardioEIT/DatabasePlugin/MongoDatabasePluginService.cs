@@ -17,14 +17,20 @@ public sealed class MongoDatabasePluginService : IMongoDatabasePluginService
         _redisPluginService = redisPluginService ?? throw new ArgumentNullException(nameof(redisPluginService));
     }
 
-    public async Task SaveSensorDataAsync<T>(T data) where T : SensorData
+    public async Task SaveSensorDataAsync<T>(IEnumerable<T> data) where T : SensorData
     {
         IMongoCollection<T> collection = _mongoDbContext.GetCollection<T>();
-        await collection.InsertOneAsync(data);
-        await _redisPluginService.SetAsync($"MongoDb:{typeof(T).Name}:DataId={data.DataRawId}", JsonConvert.SerializeObject(data));
+        IEnumerable<T> sensorData = data.ToList();
         
-        IEnumerable<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(data.SensorId);
-        await _redisPluginService.SetAsync($"MongoDb:SensorId={data.SensorId}", JsonConvert.SerializeObject(sensorDataCollection));
+        await collection.InsertManyAsync(sensorData);
+        
+        foreach (T d in sensorData)
+        {
+            await _redisPluginService.SetAsync($"MongoDb:{typeof(T).Name}:DataId={d.DataRawId}", JsonConvert.SerializeObject(data));
+        }
+
+        IEnumerable<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId);
+        await _redisPluginService.SetAsync($"MongoDb:SensorId={sensorData.First().SensorId}", JsonConvert.SerializeObject(sensorDataCollection));
     }
 
     public async Task<T?> GetSensorDataByIdAsync<T>(int dataId) where T : SensorData
