@@ -19,12 +19,12 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
         _sensorDataRepository = sensorDataRepository ?? throw new ArgumentNullException(nameof(sensorDataRepository));
     }
 
-    public async Task SaveSensorDataAsync<T>(IEnumerable<T> data, SensorType sensorType) where T : SensorData
+    public async Task<long> SaveSensorDataAsync<T>(IEnumerable<T> data, SensorType sensorType) where T : SensorData
     {
         try
         {
             IEnumerable<T> sensorData = data.ToList();
-            await _sensorDataRepository.AddDataAsync(sensorData, sensorType);
+            long insertTime = await _sensorDataRepository.AddDataAsync(sensorData, sensorType);
             
             foreach (T d in sensorData)
             {
@@ -35,6 +35,8 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
             string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
             IEnumerable<SensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
             await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection));
+
+            return insertTime;
         } catch (Exception e)
         {
             Console.WriteLine(e);

@@ -1,7 +1,9 @@
 namespace Common.Models;
 
-public class QueryResponse
+public class QueryResponse<T> where T : SensorData
 {
     public bool FromCache { get; set; }
-    public IEnumerable<SensorData?>? Data { get; set; }
+    public long QueryTimeMS { get; set; }
+    public int FetchedItems { get; set; }
+    public IEnumerable<T>? Data { get; set; }
 }

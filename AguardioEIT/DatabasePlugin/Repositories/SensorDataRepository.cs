@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Common.Enum;
 using Common.Models;
 using DatabasePlugin.Context;
@@ -18,8 +19,10 @@ public class SensorDataRepository : ISensorDataRepository
         _showerDbSet = context.Set<ShowerSensorData>();
     }
 
-    public async Task AddDataAsync(IEnumerable<SensorData> data, SensorType sensorType)
+    public async Task<long> AddDataAsync(IEnumerable<SensorData> data, SensorType sensorType)
     {
+        Stopwatch stopwatch = new();
+        
         List<SensorData> sensorData = data.ToList();
         if (sensorData.Count == 0) throw new ArgumentException("Cannot insert empty list");
         switch (sensorType)
@@ -28,11 +31,12 @@ public class SensorDataRepository : ISensorDataRepository
                 if (sensorData.Count > 1)
                 {
                     List<LeakSensorData> leakSensorData = sensorData.ConvertAll(d => (LeakSensorData)d);
-                    Console.WriteLine($"Adding {leakSensorData.Count} leak sensor data to the database.");
+                    stopwatch.Start();
                     await _leakDbSet.AddRangeAsync(leakSensorData);
                 }
                 else
                 {
+                    stopwatch.Start();
                     await  _leakDbSet.AddAsync((LeakSensorData)sensorData.First());
                 }
                 break;
@@ -40,10 +44,12 @@ public class SensorDataRepository : ISensorDataRepository
                 if (sensorData.Count > 1)
                 {
                     List<ShowerSensorData> showerSensorData = sensorData.ConvertAll(d => (ShowerSensorData)d);
+                    stopwatch.Start();
                     await _showerDbSet.AddRangeAsync(showerSensorData);
                 }
                 else
                 {
+                    stopwatch.Start();
                     await  _showerDbSet.AddAsync((ShowerSensorData)sensorData.First());
                 }
                 break;
@@ -52,6 +58,8 @@ public class SensorDataRepository : ISensorDataRepository
         }
         
         await _context.SaveChangesAsync();
+        stopwatch.Stop();
+        return stopwatch.ElapsedMilliseconds;
     }
 
     public async Task<SensorData> GetByDataIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData

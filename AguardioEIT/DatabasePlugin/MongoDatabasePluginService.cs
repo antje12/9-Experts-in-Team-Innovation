@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Common.Models;
 using DatabasePlugin.Context;
 using Interfaces;
@@ -17,12 +18,16 @@ public sealed class MongoDatabasePluginService : IMongoDatabasePluginService
         _redisPluginService = redisPluginService ?? throw new ArgumentNullException(nameof(redisPluginService));
     }
 
-    public async Task SaveSensorDataAsync<T>(IEnumerable<T> data) where T : SensorData
+    public async Task<long> SaveSensorDataAsync<T>(IEnumerable<T> data) where T : SensorData
     {
+        Stopwatch stopwatch = new();
+        
         IMongoCollection<T> collection = _mongoDbContext.GetCollection<T>();
         IEnumerable<T> sensorData = data.ToList();
         
+        stopwatch.Start();
         await collection.InsertManyAsync(sensorData);
+        stopwatch.Stop();
         
         foreach (T d in sensorData)
         {
@@ -31,6 +36,8 @@ public sealed class MongoDatabasePluginService : IMongoDatabasePluginService
 
         IEnumerable<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId);
         await _redisPluginService.SetAsync($"MongoDb:SensorId={sensorData.First().SensorId}", JsonConvert.SerializeObject(sensorDataCollection));
+
+        return stopwatch.ElapsedMilliseconds;
     }
 
     public async Task<T?> GetSensorDataByIdAsync<T>(int dataId) where T : SensorData

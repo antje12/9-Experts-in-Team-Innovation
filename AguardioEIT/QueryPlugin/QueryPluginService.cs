@@ -30,22 +30,21 @@ public class QueryPluginService : IQueryPluginService
     /// <param name="queryId">The query to use in a database lookup. Can be a dataId or a sensorId</param>
     /// <param name="sensorType">The <see cref="SensorType"/> that should be queried</param>
     /// <returns></returns>
-    public async Task<QueryResponse> GetStoredData<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<TU>> GetStoredData<T, TU>(Query query, int queryId, SensorType sensorType) where T : SensorData where TU : SensorData
     {
         try
         {
-            // Throws KeyNotFoundException no data is found
-            return await FetchDataFromCache<T>(query, queryId);
+            return await FetchDataFromCache<TU>(query, queryId);
         }
         catch (KeyNotFoundException)
         {
-            return await FetchDataFromDb<T>(query, queryId, sensorType);
+            return await FetchDataFromDb<TU>(query, queryId, sensorType);
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
             
-            return new QueryResponse
+            return new QueryResponse<TU>
             {
                 FromCache = false,
                 Data = null
@@ -53,23 +52,23 @@ public class QueryPluginService : IQueryPluginService
         }
     }
 
-    private async Task<QueryResponse> FetchDataFromCache<T>(Query query, int queryId) where T : SensorData
+    private async Task<QueryResponse<T>> FetchDataFromCache<T>(Query query, int queryId) where T : SensorData
     {
         string cacheKey = GetCacheKey<T>(query, queryId);
         string cachedData = await _redisService.GetAsync(cacheKey);
 
-        IEnumerable<LeakSensorData>? data = JsonConvert.DeserializeObject<List<LeakSensorData>>(cachedData);
+        IEnumerable<T>? data = JsonConvert.DeserializeObject<List<T>>(cachedData);
         
-        return new QueryResponse
+        return new QueryResponse<T>
         {
             FromCache = true,
             Data = data
         };
     }
 
-    private async Task<QueryResponse> FetchDataFromDb<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
+    private async Task<QueryResponse<T>> FetchDataFromDb<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
     {
-        IEnumerable<SensorData> data = query switch
+        IEnumerable<SensorData>? rawData = query switch
         {
             Query.SqlGetByDataId => new List<SensorData?>
             {
@@ -84,14 +83,16 @@ public class QueryPluginService : IQueryPluginService
             _ => throw new ArgumentOutOfRangeException(nameof(query), query, null)
         };
 
-        if (data is null) throw new Exception("No data found in database");
+        if (rawData is null) throw new Exception("No data found in database");
+        
+        IEnumerable<T> data = rawData.Cast<T>();
         
         // Set data in cache with 30 minutes expiration
-        string serializedData = JsonConvert.SerializeObject(data);
+        string serializedData = JsonConvert.SerializeObject(rawData);
         string cacheKey = GetCacheKey<T>(query, queryId);
         await _redisService.SetAsync(cacheKey, serializedData);
         
-        return new QueryResponse
+        return new QueryResponse<T>
         {
             FromCache = false,
             Data = data

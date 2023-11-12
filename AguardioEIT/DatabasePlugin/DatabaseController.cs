@@ -1,5 +1,6 @@
 using Common.Enum;
 using Common.Models;
+using DatabasePlugin.Models;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,8 +28,8 @@ public class DatabaseController : ControllerBase
         try
         {
             IEnumerable<LeakSensorData> leakSensorData = GenerateLeakSensorData(repeat, data);
-            await _sqlDatabasePluginService.SaveSensorDataAsync(leakSensorData, SensorType.LeakSensor);
-            return Ok();
+            long insertTime = await _sqlDatabasePluginService.SaveSensorDataAsync(leakSensorData, SensorType.LeakSensor);
+            return Ok(new InsertResponse { InsertTimeMS = insertTime });
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -41,8 +42,8 @@ public class DatabaseController : ControllerBase
         try
         {
             IEnumerable<ShowerSensorData> showerSensorData = GenerateShowerSensorData(repeat, data);
-            await _sqlDatabasePluginService.SaveSensorDataAsync(showerSensorData, SensorType.ShowerSensor);
-            return Ok();
+            long insertTime = await _sqlDatabasePluginService.SaveSensorDataAsync(showerSensorData, SensorType.ShowerSensor);
+            return Ok(new InsertResponse { InsertTimeMS = insertTime });
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -111,8 +112,8 @@ public class DatabaseController : ControllerBase
         try
         {
             IEnumerable<LeakSensorData> leakSensorData = GenerateLeakSensorData(repeat, data);
-            await _mongoDatabasePluginService.SaveSensorDataAsync(leakSensorData);
-            return Ok();
+            long insertTime = await _mongoDatabasePluginService.SaveSensorDataAsync(leakSensorData);
+            return Ok(new InsertResponse { InsertTimeMS = insertTime });
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -125,8 +126,8 @@ public class DatabaseController : ControllerBase
         try
         {
             IEnumerable<ShowerSensorData> showerSensorData = GenerateShowerSensorData(repeat, data);
-            await _mongoDatabasePluginService.SaveSensorDataAsync(showerSensorData);
-            return Ok();
+            long insertTime = await _mongoDatabasePluginService.SaveSensorDataAsync(showerSensorData);
+            return Ok(new InsertResponse { InsertTimeMS = insertTime });
         } catch (Exception e)
         {
             return BadRequest(e.Message);
