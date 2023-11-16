@@ -11,174 +11,175 @@ namespace KafkaPlugin;
 
 public class KafkaService : IKafkaPluginService
 {
-    //https://www.codeproject.com/Articles/5321450/ASP-NET-Core-Web-API-Plugin-Controllers-and-Servic
-    //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
-    private IHDFS_Service _hdfs;
-    private ISqlDatabasePluginService _sql;
-    private IMongoDatabasePluginService _mongo;
-    private CancellationTokenSource _cancellationTokenSource;
-    private readonly ProducerConfig _producerConfig;
-    private readonly ConsumerConfig _consumerConfig;
-    private readonly SchemaRegistryConfig _schemaRegistryConfig;
-    private readonly AvroSerializerConfig _avroSerializerConfig;
+  //https://www.codeproject.com/Articles/5321450/ASP-NET-Core-Web-API-Plugin-Controllers-and-Servic
+  //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
+  private IHDFS_Service _hdfs;
+  private ISqlDatabasePluginService _sql;
+  private IMongoDatabasePluginService _mongo;
+  private CancellationTokenSource _cancellationTokenSource;
+  private readonly ProducerConfig _producerConfig;
+  private readonly ConsumerConfig _consumerConfig;
+  private readonly SchemaRegistryConfig _schemaRegistryConfig;
+  private readonly AvroSerializerConfig _avroSerializerConfig;
 
-    private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
-    private const string GroupId = "KafkaPlugin";
-    private const string SchemaRegistry = "http://schema-registry:8081";
-    private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
-    private const int BatchSize = 1000;
+  private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
+  private const string GroupId = "KafkaPlugin";
+  private const string SchemaRegistry = "http://schema-registry:8081";
+  private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
+  private const int BatchSize = 1000;
 
-    public KafkaService(
-        IHDFS_Service hdfs,
-        ISqlDatabasePluginService sql,
-        IMongoDatabasePluginService mongo
-    )
+  public KafkaService(
+      IHDFS_Service hdfs,
+      ISqlDatabasePluginService sql,
+      IMongoDatabasePluginService mongo
+  )
+  {
+    this._hdfs = hdfs;
+    this._sql = sql;
+    this._mongo = mongo;
+    _producerConfig = new ProducerConfig
     {
-        this._hdfs = hdfs;
-        this._sql = sql;
-        this._mongo = mongo;
-        _producerConfig = new ProducerConfig
-        {
-            BootstrapServers = KafkaServers
-        };
-        _consumerConfig = new ConsumerConfig
-        {
-            BootstrapServers = KafkaServers,
-            GroupId = GroupId,
-            AutoOffsetReset = AutoOffsetReset.Earliest
-        };
-        _schemaRegistryConfig = new SchemaRegistryConfig
-        {
-            Url = SchemaRegistry
-        };
-        _avroSerializerConfig = new AvroSerializerConfig
-        {
-            BufferBytes = 100
-        };
+      BootstrapServers = KafkaServers
+    };
+    _consumerConfig = new ConsumerConfig
+    {
+      BootstrapServers = KafkaServers,
+      GroupId = GroupId,
+      AutoOffsetReset = AutoOffsetReset.Earliest
+    };
+    _schemaRegistryConfig = new SchemaRegistryConfig
+    {
+      Url = SchemaRegistry
+    };
+    _avroSerializerConfig = new AvroSerializerConfig
+    {
+      BufferBytes = 100
+    };
+  }
+
+  public string Test()
+  {
+    return "Tested!";
+  }
+
+  public string Status()
+  {
+    return "Collecting data: " + !_cancellationTokenSource?.IsCancellationRequested;
+  }
+
+  public string Produce()
+  {
+    Leak result;
+    using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
+    using (var producer = new ProducerBuilder<string, Leak>(_producerConfig)
+               .SetValueSerializer(new AvroSerializer<Leak>(schemaRegistry, _avroSerializerConfig))
+               .Build())
+    {
+      var leak = new Leak()
+      {
+        DataRaw_id = "1337",
+        DCreated = "31/08/2023 10.22.18",
+        DReported = "31/08/2023 07.24.10",
+        DLifeTimeUseCount = "2",
+        LeakLevel_id = "5",
+        Sensor_id = "22",
+        DTemperatureOut = "15",
+        DTemperatureIn = "17"
+      };
+      result = producer.ProduceAsync("leak", new Message<string, Leak>
+      {
+        Key = leak.DataRaw_id,
+        Value = leak
+      }).Result.Value;
     }
 
-    public string Test()
-    {
-        return "Tested!";
-    }
+    return result.DataRaw_id;
+  }
 
-    public string Status()
-    {
-        return "Collecting data: " + !_cancellationTokenSource?.IsCancellationRequested;
-    }
+  public string ConsumeStart()
+  {
+    _cancellationTokenSource = new CancellationTokenSource();
+    var consumeShowerTask = Task.Run(() => ConsumeLoop<Shower>("shower", _cancellationTokenSource.Token),
+        _cancellationTokenSource.Token);
+    var consumeLeakTask = Task.Run(() => ConsumeLoop<Leak>("leak", _cancellationTokenSource.Token),
+        _cancellationTokenSource.Token);
+    return "Consuming started...";
+  }
 
-    public string Produce()
+  private async Task ConsumeLoop<T>(string topicName, CancellationToken cancellationToken) where T : ISpecificRecord
+  {
+    var results = new List<ISpecificRecord>();
+    using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
+    using (var consumer = new ConsumerBuilder<string, T>(_consumerConfig)
+               .SetValueDeserializer(new AvroDeserializer<T>(schemaRegistry).AsSyncOverAsync())
+               .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
+               .Build())
     {
-        Leak result;
-        using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
-        using (var producer = new ProducerBuilder<string, Leak>(_producerConfig)
-                   .SetValueSerializer(new AvroSerializer<Leak>(schemaRegistry, _avroSerializerConfig))
-                   .Build())
+      consumer.Subscribe(topicName);
+      while (!_cancellationTokenSource.Token.IsCancellationRequested)
+      {
+        var consumeResult = consumer.Consume(_cancellationTokenSource.Token);
+        var result = consumeResult.Message.Value;
+        results.Add(result);
+        if (results.Count >= BatchSize)
         {
-            var leak = new Leak()
-            {
-                DataRaw_id = "1337",
-                DCreated = "31/08/2023 10.22.18",
-                DReported = "31/08/2023 07.24.10",
-                DLifeTimeUseCount = "2",
-                LeakLevel_id = "5",
-                Sensor_id = "22",
-                DTemperatureOut = "15",
-                DTemperatureIn = "17"
-            };
-            result = producer.ProduceAsync("leak-topic", new Message<string, Leak>
-            {
-                Key = leak.DataRaw_id,
-                Value = leak
-            }).Result.Value;
+          System.Console.WriteLine("Saved Data");
+          await SaveData(results);
+          results.Clear();
         }
+      }
 
-        return result.DataRaw_id;
+      consumer.Close();
     }
+  }
 
-    public string ConsumeStart()
-    {
-        _cancellationTokenSource = new CancellationTokenSource();
-        var consumeShowerTask = Task.Run(() => ConsumeLoop<Shower>("shower", _cancellationTokenSource.Token),
-            _cancellationTokenSource.Token);
-        var consumeLeakTask = Task.Run(() => ConsumeLoop<Leak>("leak", _cancellationTokenSource.Token),
-            _cancellationTokenSource.Token);
-        return "Consuming started...";
-    }
-
-    private async Task ConsumeLoop<T>(string topicName, CancellationToken cancellationToken) where T : ISpecificRecord
-    {
-        var results = new List<ISpecificRecord>();
-        using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
-        using (var consumer = new ConsumerBuilder<string, T>(_consumerConfig)
-                   .SetValueDeserializer(new AvroDeserializer<T>(schemaRegistry).AsSyncOverAsync())
-                   .SetErrorHandler((_, e) => Console.WriteLine($"Error: {e.Reason}"))
-                   .Build())
+  private async Task SaveData<T>(List<T> results) where T : ISpecificRecord
+  {
+    var leakData = results.OfType<Leak>() // Filter and save only Leak data
+        .Select(l => new LeakSensorDataSimple()
         {
-            consumer.Subscribe(topicName + "-topic");
-            while (!_cancellationTokenSource.Token.IsCancellationRequested)
-            {
-                var consumeResult = consumer.Consume(_cancellationTokenSource.Token);
-                var result = consumeResult.Message.Value;
-                results.Add(result);
-                if (results.Count >= BatchSize)
-                {
-                    await SaveData(results);
-                    results.Clear();
-                }
-            }
+          DataRawId = int.Parse(l.DataRaw_id),
+          //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+          DCreated = l.DCreated,
+          //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+          DReported = l.DReported,
+          DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
+          LeakLevelId = int.Parse(l.LeakLevel_id),
+          SensorId = int.Parse(l.Sensor_id),
+          DTemperatureOut = float.Parse(l.DTemperatureOut),
+          DTemperatureIn = float.Parse(l.DTemperatureIn)
+        }).ToList();
+    if (leakData.Any())
+      await _hdfs.InsertLeakSensorDataAsync(leakData);
 
-            consumer.Close();
-        }
-    }
-
-    private async Task SaveData<T>(List<T> results) where T : ISpecificRecord
-    {
-        var leakData = results.OfType<Leak>() // Filter and save only Leak data
-            .Select(l => new LeakSensorDataSimple()
-            {
-                DataRawId = int.Parse(l.DataRaw_id),
-                //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                DCreated = l.DCreated,
-                //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                DReported = l.DReported,
-                DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
-                LeakLevelId = int.Parse(l.LeakLevel_id),
-                SensorId = int.Parse(l.Sensor_id),
-                DTemperatureOut = float.Parse(l.DTemperatureOut),
-                DTemperatureIn = float.Parse(l.DTemperatureIn)
-            }).ToList();
-        if (leakData.Any())
-            await _hdfs.InsertLeakSensorDataAsync(leakData);
-
-        var showerData = results.OfType<Shower>() // Filter and save only Shower data
-            .Select(s => new ShowerSensorDataSimple()
-            {
-                DataRawId = int.Parse(s.DataRawId),
-                //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                DCreated = s.DCreated,
-                //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                DReported = s.DReported,
-                SensorId = int.Parse(s.SensorId),
-                //DShowerState = int.Parse(s.DShowerState),
-                DShowerState = s.DShowerState,
-                DTemperature = float.Parse(s.DTemperature),
-                DHumidity = int.Parse(s.DHumidity),
-                DBattery = int.Parse(s.DBattery)
-            }).ToList();
-        if (showerData.Any())
-            await _hdfs.InsertShowerSensorDataAsync(showerData);
-    }
-
-    public string ConsumeStop()
-    {
-        if (_cancellationTokenSource != null)
+    var showerData = results.OfType<Shower>() // Filter and save only Shower data
+        .Select(s => new ShowerSensorDataSimple()
         {
-            _cancellationTokenSource.Cancel();
-            //_consumeTask.Wait(_cancellationTokenSource.Token); // Wait for the background task to complete
-            //_cancellationTokenSource.Dispose();
-        }
+          DataRawId = int.Parse(s.DataRawId),
+          //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+          DCreated = s.DCreated,
+          //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+          DReported = s.DReported,
+          SensorId = int.Parse(s.SensorId),
+          //DShowerState = int.Parse(s.DShowerState),
+          DShowerState = s.DShowerState,
+          DTemperature = float.Parse(s.DTemperature),
+          DHumidity = int.Parse(s.DHumidity),
+          DBattery = int.Parse(s.DBattery)
+        }).ToList();
+    if (showerData.Any())
+      await _hdfs.InsertShowerSensorDataAsync(showerData);
+  }
 
-        return "Consuming ended...";
+  public string ConsumeStop()
+  {
+    if (_cancellationTokenSource != null)
+    {
+      _cancellationTokenSource.Cancel();
+      //_consumeTask.Wait(_cancellationTokenSource.Token); // Wait for the background task to complete
+      //_cancellationTokenSource.Dispose();
     }
+
+    return "Consuming ended...";
+  }
 }

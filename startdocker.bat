@@ -7,5 +7,5 @@ docker exec -it mongo.one.db mongosh --eval "rs.initiate({_id:'dbrs', members: [
 cd ./AguardioEIT/DatabasePlugin
 dotnet ef database update
 
-timeout  /t 20 /nobreak
+timeout  /t 30 /nobreak
 curl -X GET http://localhost:8082/HDFS/CreateHiveTables -H "accept: */*"

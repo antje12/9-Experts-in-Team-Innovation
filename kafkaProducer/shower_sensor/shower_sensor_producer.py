@@ -39,7 +39,7 @@ while(True):
         )
 
         Producer.flush()
-        time.sleep(0.2)
+        time.sleep(0.05)
     except Exception as error:
         print("something went wrong: ", error)
         break
