@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueryPlugin", "QueryPlugin\QueryPlugin.csproj", "{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "superduperawesoem", "superduperawesoem\superduperawesoem.csproj", "{2E87828B-910F-4C9B-8076-8F60236EE987}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B661B61-08E6-4C12-900B-0CC75D4D7D4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E87828B-910F-4C9B-8076-8F60236EE987}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E87828B-910F-4C9B-8076-8F60236EE987}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E87828B-910F-4C9B-8076-8F60236EE987}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E87828B-910F-4C9B-8076-8F60236EE987}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
