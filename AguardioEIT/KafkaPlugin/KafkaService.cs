@@ -13,31 +13,30 @@ public class KafkaService : IKafkaPluginService
 {
     //https://www.codeproject.com/Articles/5321450/ASP-NET-Core-Web-API-Plugin-Controllers-and-Servic
     //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
+    private IHDFS_Service _hdfs;
     private ISqlDatabasePluginService _sql;
     private IMongoDatabasePluginService _mongo;
-    private IHDFS_Service _hdfs;
     private CancellationTokenSource _cancellationTokenSource;
     private readonly ProducerConfig _producerConfig;
     private readonly ConsumerConfig _consumerConfig;
     private readonly SchemaRegistryConfig _schemaRegistryConfig;
     private readonly AvroSerializerConfig _avroSerializerConfig;
-    private readonly List<ISpecificRecord> _results;
-    private readonly List<string> _errors;
 
     private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
     private const string GroupId = "KafkaPlugin";
     private const string SchemaRegistry = "http://schema-registry:8081";
     private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
+    private const int BatchSize = 1000;
 
     public KafkaService(
+        IHDFS_Service hdfs,
         ISqlDatabasePluginService sql,
-        IMongoDatabasePluginService mongo,
-        IHDFS_Service hdfs
+        IMongoDatabasePluginService mongo
     )
     {
+        this._hdfs = hdfs;
         this._sql = sql;
         this._mongo = mongo;
-        this._hdfs = hdfs;
         _producerConfig = new ProducerConfig
         {
             BootstrapServers = KafkaServers
@@ -56,8 +55,6 @@ public class KafkaService : IKafkaPluginService
         {
             BufferBytes = 100
         };
-        _results = new List<ISpecificRecord>();
-        _errors = new List<string>();
     }
 
     public string Test()
@@ -67,8 +64,7 @@ public class KafkaService : IKafkaPluginService
 
     public string Status()
     {
-        return "Messages collected: " + _results.Count + ", Collecting: " +
-               !_cancellationTokenSource?.IsCancellationRequested + ", Errors: " + string.Join(", ", _errors);
+        return "Collecting data: " + !_cancellationTokenSource?.IsCancellationRequested;
     }
 
     public string Produce()
@@ -91,11 +87,10 @@ public class KafkaService : IKafkaPluginService
                 DTemperatureIn = "17"
             };
             result = producer.ProduceAsync("leak-topic", new Message<string, Leak>
-                {
-                    Key = leak.DataRaw_id,
-                    Value = leak
-                }).Result
-                .Value;
+            {
+                Key = leak.DataRaw_id,
+                Value = leak
+            }).Result.Value;
         }
 
         return result.DataRaw_id;
@@ -113,6 +108,7 @@ public class KafkaService : IKafkaPluginService
 
     private async Task ConsumeLoop<T>(string topicName, CancellationToken cancellationToken) where T : ISpecificRecord
     {
+        var results = new List<ISpecificRecord>();
         using (var schemaRegistry = new CachedSchemaRegistryClient(_schemaRegistryConfig))
         using (var consumer = new ConsumerBuilder<string, T>(_consumerConfig)
                    .SetValueDeserializer(new AvroDeserializer<T>(schemaRegistry).AsSyncOverAsync())
@@ -124,65 +120,54 @@ public class KafkaService : IKafkaPluginService
             {
                 var consumeResult = consumer.Consume(_cancellationTokenSource.Token);
                 var result = consumeResult.Message.Value;
-
-                _results.Add(result);
-                await SaveData(result);
-                Thread.Sleep(1000);
+                results.Add(result);
+                if (results.Count >= BatchSize)
+                {
+                    await SaveData(results);
+                    results.Clear();
+                }
             }
 
             consumer.Close();
         }
     }
 
-    private async Task SaveData<T>(T result) where T : ISpecificRecord
+    private async Task SaveData<T>(List<T> results) where T : ISpecificRecord
     {
-        switch (result)
-        {
-            case Leak l:
-                try
-                {
-                    var leak = new LeakSensorDataSimple()
-                    {
-                        DataRawId = int.Parse(l.DataRaw_id),
-                        //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                        DCreated = l.DCreated,
-                        //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                        DReported = l.DReported,
-                        DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
-                        LeakLevelId = int.Parse(l.LeakLevel_id),
-                        SensorId = int.Parse(l.Sensor_id),
-                        DTemperatureOut = float.Parse(l.DTemperatureOut),
-                        DTemperatureIn = float.Parse(l.DTemperatureIn)
-                    };
-                    //await _sql.SaveSensorDataAsync(leak);
-                    //await _mongo.SaveSensorDataAsync(new List<LeakSensorData> { leak });
-                    await _hdfs.InsertLeakSensorDataAsync(leak);
-                }
-                catch (Exception e)
-                {
-                    _errors.Add(e.Message);
-                }
+        var leakData = results.OfType<Leak>() // Filter and save only Leak data
+            .Select(l => new LeakSensorDataSimple()
+            {
+                DataRawId = int.Parse(l.DataRaw_id),
+                //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                DCreated = l.DCreated,
+                //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                DReported = l.DReported,
+                DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
+                LeakLevelId = int.Parse(l.LeakLevel_id),
+                SensorId = int.Parse(l.Sensor_id),
+                DTemperatureOut = float.Parse(l.DTemperatureOut),
+                DTemperatureIn = float.Parse(l.DTemperatureIn)
+            }).ToList();
+        if (leakData.Any())
+            await _hdfs.InsertLeakSensorDataAsync(leakData);
 
-                break;
-            case Shower s:
-                var shower = new ShowerSensorDataSimple()
-                {
-                    DataRawId = int.Parse(s.DataRawId),
-                    //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                    DCreated = s.DCreated,
-                    //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                    DReported = s.DReported,
-                    SensorId = int.Parse(s.SensorId),
-                    //DShowerState = int.Parse(s.DShowerState),
-                    DShowerState = s.DShowerState,
-                    DTemperature = float.Parse(s.DTemperature),
-                    DHumidity = int.Parse(s.DHumidity),
-                    DBattery = int.Parse(s.DBattery)
-                };
-                await _hdfs.InsertShowerSensorDataAsync(shower);
-                break;
-            default: throw new Exception("Invalid type");
-        }
+        var showerData = results.OfType<Shower>() // Filter and save only Shower data
+            .Select(s => new ShowerSensorDataSimple()
+            {
+                DataRawId = int.Parse(s.DataRawId),
+                //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                DCreated = s.DCreated,
+                //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                DReported = s.DReported,
+                SensorId = int.Parse(s.SensorId),
+                //DShowerState = int.Parse(s.DShowerState),
+                DShowerState = s.DShowerState,
+                DTemperature = float.Parse(s.DTemperature),
+                DHumidity = int.Parse(s.DHumidity),
+                DBattery = int.Parse(s.DBattery)
+            }).ToList();
+        if (showerData.Any())
+            await _hdfs.InsertShowerSensorDataAsync(showerData);
     }
 
     public string ConsumeStop()
@@ -194,7 +179,6 @@ public class KafkaService : IKafkaPluginService
             //_cancellationTokenSource.Dispose();
         }
 
-        var results = _results.Select(x => x.Get(0)).ToList();
-        return string.Join(", ", results);
+        return "Consuming ended...";
     }
 }
