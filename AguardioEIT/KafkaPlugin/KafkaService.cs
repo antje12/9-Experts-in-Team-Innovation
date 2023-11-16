@@ -26,7 +26,7 @@ public class KafkaService : IKafkaPluginService
   private const string GroupId = "KafkaPlugin";
   private const string SchemaRegistry = "http://schema-registry:8081";
   private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
-  private const int BatchSize = 1000;
+  private const int BatchSize = 100;
 
   public KafkaService(
       IHDFS_Service hdfs,
@@ -123,7 +123,6 @@ public class KafkaService : IKafkaPluginService
         results.Add(result);
         if (results.Count >= BatchSize)
         {
-          System.Console.WriteLine("Saved Data");
           await SaveData(results);
           results.Clear();
         }
@@ -149,8 +148,18 @@ public class KafkaService : IKafkaPluginService
           DTemperatureOut = float.Parse(l.DTemperatureOut),
           DTemperatureIn = float.Parse(l.DTemperatureIn)
         }).ToList();
+
     if (leakData.Any())
+    {
+      System.Console.WriteLine("Saved Data");
+      System.Console.WriteLine(results.FirstOrDefault());
+      System.Console.WriteLine(leakData.FirstOrDefault());
       await _hdfs.InsertLeakSensorDataAsync(leakData);
+    }
+    else
+    {
+      System.Console.WriteLine("Satans");
+    }
 
     var showerData = results.OfType<Shower>() // Filter and save only Shower data
         .Select(s => new ShowerSensorDataSimple()
@@ -167,8 +176,18 @@ public class KafkaService : IKafkaPluginService
           DHumidity = int.Parse(s.DHumidity),
           DBattery = int.Parse(s.DBattery)
         }).ToList();
+
     if (showerData.Any())
+    {
+      System.Console.WriteLine("Saved Data");
+      System.Console.WriteLine(results.FirstOrDefault());
+      System.Console.WriteLine(showerData.FirstOrDefault());
       await _hdfs.InsertShowerSensorDataAsync(showerData);
+    }
+    else
+    {
+      System.Console.WriteLine("Satans");
+    }
   }
 
   public string ConsumeStop()

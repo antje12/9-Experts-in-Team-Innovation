@@ -21,8 +21,8 @@ for line in file_data:
     str = line.split(';')
     data.append({
         "DataRawId": str[0],
-        "DCreated": fake.date_time_between(start_date='-5y', end_date='now').strftime("%Y-%m-%d %H:%M:%S"),
-        "DReported": fake.date_time_between(start_date='-5y', end_date='now').strftime("%Y-%m-%d %H:%M:%S"),
+        "DCreated": fake.date_time_between(start_date='-5y', end_date='now').strftime("%d/%m/%Y %H.%M.%S"),
+        "DReported": fake.date_time_between(start_date='-5y', end_date='now').strftime("%d/%m/%Y %H.%M.%S"),
         "SensorId": str[3], 
         "DShowerState": str[4],
         "DTemperature": str[5],
