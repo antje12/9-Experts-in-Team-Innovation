@@ -14,8 +14,6 @@ public class KafkaService : IKafkaPluginService
     //https://www.codeproject.com/Articles/5321450/ASP-NET-Core-Web-API-Plugin-Controllers-and-Servic
     //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
     private IHDFS_Service _hdfs;
-    private ISqlDatabasePluginService _sql;
-    private IMongoDatabasePluginService _mongo;
     private CancellationTokenSource _cancellationTokenSource;
     private readonly ProducerConfig _producerConfig;
     private readonly ConsumerConfig _consumerConfig;
@@ -25,18 +23,13 @@ public class KafkaService : IKafkaPluginService
     private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
     private const string GroupId = "KafkaPlugin";
     private const string SchemaRegistry = "http://schema-registry:8081";
-    private const string DateFormat = "dd/MM/yyyy HH.mm.ss";
     private const int BatchSize = 100;
 
     public KafkaService(
-        IHDFS_Service hdfs,
-        ISqlDatabasePluginService sql,
-        IMongoDatabasePluginService mongo
+        IHDFS_Service hdfs
     )
     {
-        this._hdfs = hdfs;
-        this._sql = sql;
-        this._mongo = mongo;
+        _hdfs = hdfs;
         _producerConfig = new ProducerConfig
         {
             BootstrapServers = KafkaServers
@@ -123,13 +116,16 @@ public class KafkaService : IKafkaPluginService
                 results.Add(result);
                 if (results.Count >= BatchSize)
                 {
+                    Console.WriteLine("Batch collected");
                     // Use switch to handle different types
                     switch (results)
                     {
                         case List<Leak> leaks:
+                            Console.WriteLine("Of leak data");
                             await SaveData(leaks);
                             break;
                         case List<Shower> showers:
+                            Console.WriteLine("Of shower data");
                             await SaveData(showers);
                             break;
                         default: throw new Exception("Invalid type");
@@ -162,14 +158,14 @@ public class KafkaService : IKafkaPluginService
         
         if (showerData.Any())
         {
-            Console.WriteLine("Saved Data");
+            Console.WriteLine("Data saved");
             Console.WriteLine(results.FirstOrDefault());
             Console.WriteLine(showerData.FirstOrDefault());
             await _hdfs.InsertShowerSensorDataAsync(showerData);
         }
         else
         {
-            Console.WriteLine("Satans");
+            Console.WriteLine("Data not saved");
         }
     }
 
@@ -191,14 +187,14 @@ public class KafkaService : IKafkaPluginService
 
         if (leakData.Any())
         {
-            Console.WriteLine("Saved Data");
+            Console.WriteLine("Data saved");
             Console.WriteLine(results.FirstOrDefault());
             Console.WriteLine(leakData.FirstOrDefault());
             await _hdfs.InsertLeakSensorDataAsync(leakData);
         }
         else
         {
-            Console.WriteLine("Satans");
+            Console.WriteLine("Data not saved");
         }
     }
 
