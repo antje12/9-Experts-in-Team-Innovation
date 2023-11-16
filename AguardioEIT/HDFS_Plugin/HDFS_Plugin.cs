@@ -7,6 +7,6 @@ public class HDFS_Plugin : IPlugin
 {
     public void Initialize(IServiceCollection services)
     {
-        throw new NotImplementedException();
+        services.AddSingleton<IHDFS_Service, HDFS_Service>();
     }
 }

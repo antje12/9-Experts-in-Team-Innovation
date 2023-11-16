@@ -1,95 +1,197 @@
 version: "3"
 services:
-  namenode:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    hostname: namenode
-    command: ["hdfs", "namenode"]
+  zookeeper-1:
+    container_name: zookeeper-1
+    image: confluentinc/cp-zookeeper:7.2.1
     ports:
-      - 9870:9870
-    env_file:
-      - ./HDFS/config
+      - 2181:2181
+    restart: unless-stopped
     environment:
-        ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
-    networks:
-      sharednetwork:
-    
-  datanode:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    command: ["hdfs", "datanode"]
-    env_file:
-      - ./HDFS/config
-    volumes:
-      - ./datanode_data:/hadoop/dfs/data
-    networks:
-      sharednetwork:
-  
-  resourcemanager:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    hostname: resourcemanager
-    command: ["yarn", "resourcemanager"]
-    ports:
-        - 8088:8088
-    env_file:
-      - ./HDFS/config
-    volumes:
-      - ./test.sh:/opt/test.sh
-    networks:
-      sharednetwork:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
 
-  nodemanager:
-    #restart: unless-stopped
-    image: apache/hadoop:3
-    command: ["yarn", "nodemanager"]
+  zookeeper-2:
+    container_name: zookeeper-2
+    image: confluentinc/cp-zookeeper:7.2.1
+    ports:
+      - 2182:2181
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+
+  zookeeper-3:
+    container_name: zookeeper-3
+    image: confluentinc/cp-zookeeper:7.2.1
+    ports:
+      - 2183:2181
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: zookeeper-1:2888:3888;zookeeper-2:2888:3888;zookeeper-3:2888:3888
+
+  kafka-1:
+    container_name: kafka-1
+    image: confluentinc/cp-kafka:7.2.1
+    ports:
+      - 19092:19092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka-1:9092,EXTERNAL://localhost:19092"
+    restart: unless-stopped
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+  kafka-2:
+    container_name: kafka-2
+    image: confluentinc/cp-kafka:7.2.1
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka-2:9092,EXTERNAL://localhost:29092"
+    restart: unless-stopped
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+  kafka-3:
+    container_name: kafka-3
+    image: confluentinc/cp-kafka:7.2.1
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper-1:2181,zookeeper-2:2181,zookeeper-3:2181
+      KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:39092
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka-3:9092,EXTERNAL://localhost:39092"
+    restart: unless-stopped
+    depends_on:
+      - zookeeper-1
+      - zookeeper-2
+      - zookeeper-3
+
+  schema-registry:
+    container_name: schema-registry
+    image: confluentinc/cp-schema-registry:latest
+    hostname: schema-registry
+    restart: always
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    ports:
+      - "8081:8081"
+    environment:
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "kafka-1:9092,kafka-2:9092,kafka-3:9092"
+      SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081"
+      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_ORIGIN: '*'
+      SCHEMA_REGISTRY_ACCESS_CONTROL_ALLOW_METHODS: 'GET,POST,PUT,OPTIONS'
+
+  kowl:
+    container_name: kowl
+    image: quay.io/cloudhut/kowl:master 
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
+    environment:
+      KAFKA_BROKERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+      KAFKA_SCHEMAREGISTRY_ENABLED: true
+      KAFKA_SCHEMAREGISTRY_URLS: http://schema-registry:8081
+
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - namenode:/hadoop/dfs/name
+    environment:
+      - CLUSTER_NAME=test
     env_file:
-      - ./HDFS/config
-    networks:
-      sharednetwork:
+      - ./hadoop-hive.env
+    ports:
+      - "50070:50070"
+
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode1:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    ports:
+      - "50075:50075"
+
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode2:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    ports:
+      - "50076:50075"
+
+  datanode3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode3:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "namenode:50070"
+    ports:
+      - "50077:50075"
 
   hive-server:
-    #restart: unless-stopped
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
-      - ./HDFS/hadoop-hive.env
-    depends_on:
-      - hive-metastore
-      - namenode
-      - datanode
+      - ./hadoop-hive.env
     environment:
-      SERVICE_PRECONDITION: "hive-metastore:9083"
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
-    networks:
-      sharednetwork:
+      SERVICE_PRECONDITION: "hive-metastore:9083"
+    ports:
+      - "10000:10000"
 
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
     env_file:
-      - ./HDFS/hadoop-hive.env
-    depends_on:
-      - hive-metastore-db
+      - ./hadoop-hive.env
     command: /opt/hive/bin/hive --service metastore
     environment:
-      SERVICE_PRECONDITION: "namenode:9870 hive-metastore-db:5432"
+      SERVICE_PRECONDITION: "namenode:50070 datanode1:50075 hive-metastore-postgresql:5432"
     ports:
       - "9083:9083"
-    networks:
-      sharednetwork:
 
-  hive-metastore-db:
-    #restart: unless-stopped
-    build: 
-      context: ./HIVE
-      dockerfile: Dockerfile
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+  hive-metastore-postgresql:
+    image: bde2020/hive-metastore-postgresql:2.3.0
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    networks:
-      sharednetwork:
+      - postgres_metastore_hive:/var/lib/postgresql/data
 
   redis-server:
     image: redis
@@ -98,8 +200,6 @@ services:
     volumes:
       - ./AguardioEIT/RedisPlugin/redis.conf:/usr/local/etc/redis/redis.conf
     command: redis-server /usr/local/etc/redis/redis.conf
-    networks:
-      sharednetwork:
 
   api:
     build: 
@@ -114,8 +214,6 @@ services:
       - mongo.three.db
     environment:
       - DOCKERIZED=true
-    networks:
-      sharednetwork:
 
   postgres:
     image: postgres:13
@@ -127,8 +225,6 @@ services:
       - postgres_sensor_data:/var/lib/postgresql/data
     ports:
       - 5444:5432
-    networks:
-      sharednetwork:
   
   mongo.one.db:
     container_name: mongo.one.db
@@ -137,8 +233,6 @@ services:
       - mongo.one.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-    networks:
-      sharednetwork:
  
   mongo.two.db:
     container_name: mongo.two.db
@@ -149,8 +243,6 @@ services:
       - mongo.two.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-    networks:
-      sharednetwork:
  
   mongo.three.db:
     container_name: mongo.three.db
@@ -161,19 +253,34 @@ services:
       - mongo.three.vol:/data/db
     restart: always
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-    networks:
-      sharednetwork:
+
+  leak-sensor:
+    container_name: leak-sensor
+    build: ./kafkaProducer/leak_sensor
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
+
+  shower-sensor:
+    container_name: shower-sensor
+    build: ./kafkaProducer/shower_sensor
+    restart: unless-stopped
+    depends_on:
+      - schema-registry
  
 volumes:
-  postgres_data:
   postgres_sensor_data:
+  postgres_metastore_hive:
   mongo.one.vol:
     name: "mongo.one.vol"
   mongo.two.vol:
     name: "mongo.two.vol"
   mongo.three.vol:
     name: "mongo.three.vol"
-
-networks:
-  sharednetwork:
-    name: "sharednetwork"
+  namenode:
+  datanode1:
+    name: datanode1
+  datanode2:
+    name: datanode2
+  datanode3:
+    name: datanode3

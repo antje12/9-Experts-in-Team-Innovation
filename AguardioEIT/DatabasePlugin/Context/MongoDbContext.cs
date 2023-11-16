@@ -13,6 +13,14 @@ public class MongoDbContext
         _database = client.GetDatabase("aguardio");
     }
 
-    public IMongoCollection<LeakSensorData> LeakSensorDatas => 
+    public IMongoCollection<LeakSensorData> LeakSensorData => 
         _database.GetCollection<LeakSensorData>("LeakSensorData");
+    public IMongoCollection<ShowerSensorData> ShowerSensorData => 
+        _database.GetCollection<ShowerSensorData>("ShowerSensorData");
+
+    public IMongoCollection<T> GetCollection<T>() where T : SensorData
+    {
+        string collectionName = typeof(T).Name;
+        return _database.GetCollection<T>(collectionName);
+    }
 }

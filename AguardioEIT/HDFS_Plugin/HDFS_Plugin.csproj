@@ -12,6 +12,16 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
+      <PackageReference Include="System.Data.Odbc" Version="8.0.0-rc.2.23479.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="Microsoft.Hadoop.Hive">
+        <HintPath>..\..\..\..\..\.nuget\packages\microsoft.hadoop.hive\0.12.5126.42915\lib\net40\Microsoft.Hadoop.Hive.dll</HintPath>
+      </Reference>
+      <Reference Include="System.Data.Odbc">
+        <HintPath>..\..\..\..\..\.nuget\packages\system.data.odbc\8.0.0-rc.2.23479.6\lib\net7.0\System.Data.Odbc.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>

@@ -55,6 +55,40 @@ namespace DatabasePlugin.Migrations
 
                     b.ToTable("LeakSensorData");
                 });
+
+            modelBuilder.Entity("Common.Models.ShowerSensorData", b =>
+                {
+                    b.Property<int>("DataRawId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DataRawId"));
+
+                    b.Property<int>("DBattery")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DCreated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DHumidity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("DReported")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("DShowerState")
+                        .HasColumnType("integer");
+
+                    b.Property<float>("DTemperature")
+                        .HasColumnType("real");
+
+                    b.Property<int>("SensorId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DataRawId");
+
+                    b.ToTable("ShowerSensorData");
+                });
 #pragma warning restore 612, 618
         }
     }
