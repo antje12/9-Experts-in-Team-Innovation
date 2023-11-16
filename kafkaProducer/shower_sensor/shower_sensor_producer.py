@@ -2,6 +2,10 @@ from confluent_kafka.avro import AvroProducer
 from confluent_kafka import avro 
 import time
 import random
+from faker import Faker
+from datetime import datetime
+
+fake = Faker()
 
 producer_config = {
     "bootstrap.servers":"kafka-1:9092",
@@ -17,8 +21,8 @@ for line in file_data:
     str = line.split(';')
     data.append({
         "DataRawId": str[0],
-        "DCreated": str[1],
-        "DReported": str[2],
+        "DCreated": fake.date_time_between(start_date='-5y', end_date='now').strftime("%Y-%m-%d %H:%M:%S"),
+        "DReported": fake.date_time_between(start_date='-5y', end_date='now').strftime("%Y-%m-%d %H:%M:%S"),
         "SensorId": str[3], 
         "DShowerState": str[4],
         "DTemperature": str[5],
@@ -35,7 +39,8 @@ while(True):
         )
 
         Producer.flush()
-        time.sleep(1)
+        time.sleep(0.2)
     except Exception as error:
         print("something went wrong: ", error)
         break
+
