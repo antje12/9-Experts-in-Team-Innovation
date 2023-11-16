@@ -15,6 +15,7 @@ public class KafkaService : IKafkaPluginService
     //https://github.com/confluentinc/confluent-kafka-dotnet/blob/master/examples/AvroSpecific/Program.cs
     private ISqlDatabasePluginService _sql;
     private IMongoDatabasePluginService _mongo;
+    private IHDFS_Service _hdfs;
     private CancellationTokenSource _cancellationTokenSource;
     private readonly ProducerConfig _producerConfig;
     private readonly ConsumerConfig _consumerConfig;
@@ -30,11 +31,13 @@ public class KafkaService : IKafkaPluginService
 
     public KafkaService(
         ISqlDatabasePluginService sql,
-        IMongoDatabasePluginService mongo
+        IMongoDatabasePluginService mongo,
+        IHDFS_Service hdfs
     )
     {
         this._sql = sql;
         this._mongo = mongo;
+        this._hdfs = hdfs;
         _producerConfig = new ProducerConfig
         {
             BootstrapServers = KafkaServers
@@ -138,19 +141,22 @@ public class KafkaService : IKafkaPluginService
             case Leak l:
                 try
                 {
-                    var leak = new LeakSensorData()
+                    var leak = new LeakSensorDataSimple()
                     {
-                        DataRawId = Int32.Parse(l.DataRaw_id),
-                        DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-                        DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-                        DLifeTimeUseCount = Int32.Parse(l.DLifeTimeUseCount),
-                        LeakLevelId = Int32.Parse(l.LeakLevel_id),
-                        SensorId = Int32.Parse(l.Sensor_id),
-                        DTemperatureOut = Double.Parse(l.DTemperatureOut),
-                        DTemperatureIn = Double.Parse(l.DTemperatureIn)
+                        DataRawId = int.Parse(l.DataRaw_id),
+                        //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                        DCreated = l.DCreated,
+                        //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                        DReported = l.DReported,
+                        DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
+                        LeakLevelId = int.Parse(l.LeakLevel_id),
+                        SensorId = int.Parse(l.Sensor_id),
+                        DTemperatureOut = float.Parse(l.DTemperatureOut),
+                        DTemperatureIn = float.Parse(l.DTemperatureIn)
                     };
                     //await _sql.SaveSensorDataAsync(leak);
-                    await _mongo.SaveSensorDataAsync(new List<LeakSensorData> { leak });
+                    //await _mongo.SaveSensorDataAsync(new List<LeakSensorData> { leak });
+                    await _hdfs.InsertLeakSensorDataAsync(leak);
                 }
                 catch (Exception e)
                 {
@@ -159,12 +165,21 @@ public class KafkaService : IKafkaPluginService
 
                 break;
             case Shower s:
-                // ToDo
-                //var shower = new ShowerSensorData()
-                //{
-                //};
-                //await _sql.SaveSensorDataAsync(shower);
-                //await _mongo.SaveSensorDataAsync(shower);
+                var shower = new ShowerSensorDataSimple()
+                {
+                    DataRawId = int.Parse(s.DataRawId),
+                    //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                    DCreated = s.DCreated,
+                    //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                    DReported = s.DReported,
+                    SensorId = int.Parse(s.SensorId),
+                    //DShowerState = int.Parse(s.DShowerState),
+                    DShowerState = s.DShowerState,
+                    DTemperature = float.Parse(s.DTemperature),
+                    DHumidity = int.Parse(s.DHumidity),
+                    DBattery = int.Parse(s.DBattery)
+                };
+                await _hdfs.InsertShowerSensorDataAsync(shower);
                 break;
             default: throw new Exception("Invalid type");
         }
