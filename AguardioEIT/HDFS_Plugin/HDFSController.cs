@@ -31,11 +31,11 @@ namespace HDFS_Plugin
         DataRawId = 1,
         DCreated = "2023-11-04",
         DReported = "2023-11-04",
-        DLifeTimeUseCount = 100,
+        DLifeTimeUseCount = "100",
         LeakLevelId = 2,
         SensorId = 1,
-        DTemperatureOut = 25.5f,
-        DTemperatureIn = 22.3f
+        DTemperatureOut = "25.5f",
+        DTemperatureIn = "22.3f"
       };
 
       await _hdfsService.InsertLeakSensorDataAsync(dummyLeakData);
@@ -53,17 +53,16 @@ namespace HDFS_Plugin
       for (int i = 0; i < count; i++)
       {
         if ((i != 0) && (i % 10 == 0)) sensorId++;
-        var randomInt = rnd.Next(1, 100);
         var dummyLeakData = new LeakSensorDataSimple
         {
           DataRawId = i + 1,
           DCreated = "2023-11-04",
           DReported = "2023-11-04",
-          DLifeTimeUseCount = randomInt,
+          DLifeTimeUseCount = "randomInt",
           LeakLevelId = 2,
           SensorId = sensorId,
-          DTemperatureOut = 25.5f,
-          DTemperatureIn = 22.3f
+          DTemperatureOut = "25.5f",
+          DTemperatureIn = "22.3f"
         };
         data.Add(dummyLeakData);
       }
