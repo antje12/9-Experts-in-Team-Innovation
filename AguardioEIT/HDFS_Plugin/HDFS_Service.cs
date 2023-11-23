@@ -283,9 +283,9 @@ namespace HDFS_Plugin
               DReported = reader.GetString(2),
               SensorId = reader.GetInt32(3),
               DShowerState = reader.GetString(4),
-              DTemperature = reader.GetFloat(5),
-              DHumidity = reader.GetInt32(6),
-              DBattery = reader.GetInt32(7)
+              DTemperature = reader.GetString(5),
+              DHumidity = reader.GetString(6),
+              DBattery = reader.GetString(7)
             };
             showerSensorDataList.Add(data);
           }
@@ -326,9 +326,9 @@ namespace HDFS_Plugin
                 DReported = reader.GetString(2),
                 SensorId = reader.GetInt32(3),
                 DShowerState = reader.GetString(4),
-                DTemperature = reader.GetFloat(5),
-                DHumidity = reader.GetInt32(6),
-                DBattery = reader.GetInt32(7)
+                DTemperature = reader.GetString(5),
+                DHumidity = reader.GetString(6),
+                DBattery = reader.GetString(7)
               };
               showerSensorDataList.Add(data);
             }
@@ -368,9 +368,9 @@ namespace HDFS_Plugin
                 DReported = reader.GetString(2),
                 SensorId = reader.GetInt32(3),
                 DShowerState = reader.GetString(4),
-                DTemperature = reader.GetFloat(5),
-                DHumidity = reader.GetInt32(6),
-                DBattery = reader.GetInt32(7)
+                DTemperature = reader.GetString(5),
+                DHumidity = reader.GetString(6),
+                DBattery = reader.GetString(7)
               };
             }
           }

@@ -134,9 +134,9 @@ namespace HDFS_Plugin
         DReported = "2023-11-04",
         SensorId = 1,
         DShowerState = "On",
-        DTemperature = 35.5f,
-        DHumidity = 80,
-        DBattery = 90
+        DTemperature = "35.5f",
+        DHumidity = "80",
+        DBattery = "90"
       };
 
       await _hdfsService.InsertShowerSensorDataAsync(dummyShowerData);
@@ -159,9 +159,9 @@ namespace HDFS_Plugin
           DReported = "2023-11-04",
           SensorId = sensorId,
           DShowerState = "On",
-          DTemperature = 35.5f,
-          DHumidity = 80,
-          DBattery = 90
+          DTemperature = "35.5f",
+          DHumidity = "80",
+          DBattery = "90"
         };
         data.Add(dummyLeakData);
       }
