@@ -62,27 +62,54 @@ public class SensorDataRepository : ISensorDataRepository
         return stopwatch.ElapsedMilliseconds;
     }
 
-    public async Task<SensorData> GetByDataIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetByDataIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
     {
+        Stopwatch sw = new();
+        
+        sw.Start();
         SensorData? data = sensorType switch
         {
             SensorType.LeakSensor => await _leakDbSet.FindAsync(dataId),
             SensorType.ShowerSensor => await _showerDbSet.FindAsync(dataId),
             _ => throw new ArgumentException("Invalid sensor type.")
         };
-
-        return data ?? throw new KeyNotFoundException($"Data with the id {dataId} was not found.");
+        sw.Stop();
+        
+        if (data is null) throw new KeyNotFoundException($"Data with the id {dataId} was not found.");
+        T convertedData = (T)data;
+        
+        List<T> sensorDataList = new() { convertedData };
+        return new QueryResponse<T>
+        {
+            Data = sensorDataList,
+            FetchedItems = sensorDataList.Count,
+            FromCache = false,
+            QueryTimeMs = sw.ElapsedMilliseconds
+        };
     }
 
-    public async Task<IEnumerable<SensorData>> GetBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
     {
+        Stopwatch sw = new();
+        
+        sw.Start();
         IEnumerable<SensorData> data = sensorType switch
         {
             SensorType.LeakSensor => await _leakDbSet.Where(data => data.SensorId == sensorId).ToListAsync(),
             SensorType.ShowerSensor => await _showerDbSet.Where(data => data.SensorId == sensorId).ToListAsync(),
             _ => throw new ArgumentException("Invalid sensor type.")
         };
+        sw.Stop();
 
-        return data;
+        IEnumerable<T> sensorDataEnumerable = data.ToList().Cast<T>();
+        List<T> sensorDataList = sensorDataEnumerable.ToList();
+
+        return new QueryResponse<T>
+        {
+            Data = sensorDataList,
+            FetchedItems = sensorDataList.Count,
+            FromCache = false,
+            QueryTimeMs = sw.ElapsedMilliseconds
+        };
     }
 }

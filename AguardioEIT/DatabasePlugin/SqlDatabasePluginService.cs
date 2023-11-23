@@ -33,8 +33,8 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
             }
             
             string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
-            IEnumerable<SensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
-            await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection));
+            QueryResponse<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
+            await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection.Data));
 
             return insertTime;
         } catch (Exception e)
@@ -44,12 +44,12 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
         }
     }
 
-    public async Task<SensorData?> GetSensorDataByIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetSensorDataByIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
     {
         return await _sensorDataRepository.GetByDataIdAsync<T>(dataId, sensorType);
     }
 
-    public async Task<IEnumerable<SensorData>> GetSensorDataBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetSensorDataBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
     {
         return await _sensorDataRepository.GetBySensorIdAsync<T>(sensorId, sensorType);
     }

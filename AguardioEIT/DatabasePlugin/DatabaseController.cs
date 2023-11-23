@@ -55,9 +55,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            SensorData? data = 
+            QueryResponse<LeakSensorData> queryResponse = 
                 await _sqlDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId, SensorType.LeakSensor);
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -69,9 +69,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            SensorData? data = 
+            QueryResponse<ShowerSensorData> queryResponse = 
                 await _sqlDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId, SensorType.ShowerSensor);
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -83,9 +83,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            IEnumerable<SensorData> data = 
+            QueryResponse<LeakSensorData> queryResponse = 
                 await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId, SensorType.LeakSensor);
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -97,9 +97,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            IEnumerable<SensorData> data = 
+            QueryResponse<ShowerSensorData> queryResponse = 
                 await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId, SensorType.ShowerSensor);
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -139,9 +139,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            LeakSensorData? data = await _mongoDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId);
+            QueryResponse<LeakSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId);
 
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -153,9 +153,9 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            ShowerSensorData? data = await _mongoDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId);
+            QueryResponse<ShowerSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId);
 
-            return Ok(data);
+            return Ok(queryResponse);
         } catch (Exception e)
         {
             return BadRequest(e.Message);
@@ -167,10 +167,10 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            IEnumerable<LeakSensorData> data = 
+            QueryResponse<LeakSensorData> queryResponse =
                 await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId);
 
-            return Ok(data);
+            return Ok(queryResponse);
         }
         catch (Exception e)
         {
@@ -183,10 +183,10 @@ public class DatabaseController : ControllerBase
     {
         try
         {
-            IEnumerable<ShowerSensorData> data = 
+            QueryResponse<ShowerSensorData> queryResponse = 
                 await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId);
 
-            return Ok(data);
+            return Ok(queryResponse);
         }
         catch (Exception e)
         {

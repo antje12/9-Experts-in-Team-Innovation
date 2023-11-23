@@ -68,35 +68,30 @@ public class QueryPluginService : IQueryPluginService
 
     private async Task<QueryResponse<T>> FetchDataFromDb<T>(Query query, int queryId, SensorType sensorType) where T : SensorData
     {
-        IEnumerable<SensorData>? rawData = query switch
+        QueryResponse<T> rawData = query switch
         {
-            Query.SqlGetByDataId => new List<SensorData?>
-            {
-                await _sqlDatabasePluginService.GetSensorDataByIdAsync<T>(queryId, sensorType)
-            }!,
+            Query.SqlGetByDataId => await _sqlDatabasePluginService.GetSensorDataByIdAsync<T>(queryId, sensorType),
             Query.SqlGetBySensorId => await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<T>(queryId, sensorType),
-            Query.MongoDbGetByDataId => new List<SensorData?>
-            {
-                await _mongoDatabasePluginService.GetSensorDataByIdAsync<T>(queryId)
-            }!,
+            Query.MongoDbGetByDataId => await _mongoDatabasePluginService.GetSensorDataByIdAsync<T>(queryId),
             Query.MongoDbGetBySensorId => await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<T>(queryId),
             _ => throw new ArgumentOutOfRangeException(nameof(query), query, null)
         };
 
         if (rawData is null) throw new Exception("No data found in database");
-        
-        IEnumerable<T> data = rawData.Cast<T>();
-        
+
+        if (rawData.Data is null) throw new KeyNotFoundException($"Data with the id {queryId} was not found.");
+
         // Set data in cache with 30 minutes expiration
         string serializedData = JsonConvert.SerializeObject(rawData);
         string cacheKey = GetCacheKey<T>(query, queryId);
         await _redisService.SetAsync(cacheKey, serializedData);
-        
+    
         return new QueryResponse<T>
         {
             FromCache = false,
-            Data = data
+            Data = rawData.Data
         };
+        
     }
 
     private static string GetCacheKey<T>(Query query, int queryId) where T : SensorData
