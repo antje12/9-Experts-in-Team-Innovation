@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Common.Models;
 using Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -67,9 +68,12 @@ namespace HDFS_Plugin
         data.Add(dummyLeakData);
       }
 
-      await _hdfsService.InsertLeakSensorDataAsync(data);
+      Stopwatch stopwatch = new();
+      stopwatch.Start();
 
-      return Ok($"{count} rows of Leak sensor data inserted successfully.");
+      await _hdfsService.InsertLeakSensorDataAsync(data);
+      stopwatch.Stop();
+      return Ok($"{count} rows of Leak sensor data inserted successfully {stopwatch.ElapsedMilliseconds}.");
     }
 
     [HttpGet("LeakSensorData/GetAll")]
@@ -163,9 +167,11 @@ namespace HDFS_Plugin
         data.Add(dummyLeakData);
       }
 
+      Stopwatch stopwatch = new();
+      stopwatch.Start();
       await _hdfsService.InsertShowerSensorDataAsync(data);
-
-      return Ok($"{count} rows of Shower sensor data inserted successfully.");
+      stopwatch.Stop();
+      return Ok($"{count} rows of Shower sensor data inserted successfully {stopwatch.ElapsedMilliseconds}.");
     }
 
     [HttpGet("ShowerSensorData/GetAll")]
