@@ -122,11 +122,11 @@ public class KafkaService : IKafkaPluginService
                     {
                         case List<Leak> leaks:
                             Console.WriteLine("Of leak data");
-                            await SaveData(leaks);
+                            await SaveLeakData(leaks);
                             break;
                         case List<Shower> showers:
                             Console.WriteLine("Of shower data");
-                            await SaveData(showers);
+                            await SaveShowerData(showers);
                             break;
                         default: throw new Exception("Invalid type");
                     }
@@ -139,8 +139,9 @@ public class KafkaService : IKafkaPluginService
         }
     }
 
-    private async Task SaveData(List<Shower> results)
+    private async Task SaveShowerData(List<Shower> results)
     {
+        Console.WriteLine("SaveShowerData Called");
         var showerData = results.Select(s => new ShowerSensorDataSimple()
         {
             DataRawId = int.Parse(s.DataRawId),
@@ -169,8 +170,9 @@ public class KafkaService : IKafkaPluginService
         }
     }
 
-    private async Task SaveData(List<Leak> results)
+    private async Task SaveLeakData(List<Leak> results)
     {
+        Console.WriteLine("SaveLeakData Called");
         var leakData = results.Select(l => new LeakSensorDataSimple()
         {
             DataRawId = int.Parse(l.DataRaw_id),
