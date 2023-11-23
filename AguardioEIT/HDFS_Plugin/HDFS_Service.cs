@@ -84,8 +84,8 @@ namespace HDFS_Plugin
     {
       await OdbcConnection.OpenAsync();
       var insertQuery = $@"INSERT INTO leak_sensor_data
-                                 VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.DLifeTimeUseCount},
-                                         {data.LeakLevelId}, {data.SensorId}, {data.DTemperatureOut}, {data.DTemperatureIn});";
+                                 VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', '{data.DLifeTimeUseCount}',
+                                         {data.LeakLevelId}, {data.SensorId}, '{data.DTemperatureOut}', '{data.DTemperatureIn}');";
       await ExecuteQueryAsync(insertQuery);
       await OdbcConnection.CloseAsync();
     }
@@ -97,7 +97,7 @@ namespace HDFS_Plugin
       var insertValues = new List<string>();
       foreach (var sensorData in data)
       {
-        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.DLifeTimeUseCount}, {sensorData.LeakLevelId}, {sensorData.SensorId}, {sensorData.DTemperatureOut}, {sensorData.DTemperatureIn})");
+        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', '{sensorData.DLifeTimeUseCount}', {sensorData.LeakLevelId}, {sensorData.SensorId}, '{sensorData.DTemperatureOut}', '{sensorData.DTemperatureIn}')");
       }
       insertCommandText.Append(string.Join(",", insertValues));
       insertCommandText.Append(";");
@@ -111,7 +111,7 @@ namespace HDFS_Plugin
       await OdbcConnection.OpenAsync();
       var insertQuery = $@"INSERT INTO shower_sensor_data
                                  VALUES ({data.DataRawId}, '{data.DCreated}', '{data.DReported}', {data.SensorId},
-                                         '{data.DShowerState}', {data.DTemperature}, {data.DHumidity}, {data.DBattery});";
+                                         '{data.DShowerState}', '{data.DTemperature}', '{data.DHumidity}', '{data.DBattery}');";
       await ExecuteQueryAsync(insertQuery);
       await OdbcConnection.CloseAsync();
     }
@@ -123,7 +123,7 @@ namespace HDFS_Plugin
       var insertValues = new List<string>();
       foreach (var sensorData in data)
       {
-        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.SensorId}, '{sensorData.DShowerState}', {sensorData.DTemperature}, {sensorData.DHumidity}, {sensorData.DBattery})");
+        insertValues.Add($"({sensorData.DataRawId}, '{sensorData.DCreated}', '{sensorData.DReported}', {sensorData.SensorId}, '{sensorData.DShowerState}', '{sensorData.DTemperature}', '{sensorData.DHumidity}', '{sensorData.DBattery}')");
       }
       insertCommandText.Append(string.Join(",", insertValues));
       insertCommandText.Append(";");
