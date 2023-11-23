@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Odbc;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Models;
@@ -50,11 +51,11 @@ namespace HDFS_Plugin
                             dataraw_id INT,
                             dcreated STRING,
                             dreported STRING,
-                            dlifetimeusecount INT,
+                            dlifetimeusecount STRING,
                             leaklevel_id INT,
                             sensor_id INT,
-                            dtemperatureout FLOAT,
-                            dtemperaturein FLOAT
+                            dtemperatureout STRING,
+                            dtemperaturein STRING
                           )
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ','
@@ -67,9 +68,9 @@ namespace HDFS_Plugin
                             dreported STRING,
                             sensorid INT,
                             dshowerstate STRING,
-                            dtemperature FLOAT,
-                            dhumidity INT,
-                            dbattery INT
+                            dtemperature STRING,
+                            dhumidity STRING,
+                            dbattery STRING
                           )
                           ROW FORMAT DELIMITED
                           FIELDS TERMINATED BY ';'
@@ -138,6 +139,8 @@ namespace HDFS_Plugin
 
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         await OdbcConnection.OpenAsync();
         using (var command = new OdbcCommand(selectQuery, OdbcConnection))
         using (var reader = await command.ExecuteReaderAsync())
@@ -149,15 +152,17 @@ namespace HDFS_Plugin
               DataRawId = reader.GetInt32(0),
               DCreated = reader.GetString(1),
               DReported = reader.GetString(2),
-              DLifeTimeUseCount = reader.GetInt32(3),
+              DLifeTimeUseCount = reader.GetString(3),
               LeakLevelId = reader.GetInt32(4),
               SensorId = reader.GetInt32(5),
-              DTemperatureOut = reader.GetFloat(6),
-              DTemperatureIn = reader.GetFloat(7)
+              DTemperatureOut = reader.GetString(6),
+              DTemperatureIn = reader.GetString(7)
             };
             leakSensorDataList.Add(data);
           }
         }
+        stopwatch.Stop();
+        System.Console.WriteLine($"Joo joo det tog sådan ca: {stopwatch.ElapsedMilliseconds} ms at hente {leakSensorDataList.Count} ting bum bum");
       }
       catch (Exception e)
       {
@@ -191,11 +196,11 @@ namespace HDFS_Plugin
                 DataRawId = reader.GetInt32(0),
                 DCreated = reader.GetString(1),
                 DReported = reader.GetString(2),
-                DLifeTimeUseCount = reader.GetInt32(3),
+                DLifeTimeUseCount = reader.GetString(3),
                 LeakLevelId = reader.GetInt32(4),
                 SensorId = reader.GetInt32(5),
-                DTemperatureOut = reader.GetFloat(6),
-                DTemperatureIn = reader.GetFloat(7)
+                DTemperatureOut = reader.GetString(6),
+                DTemperatureIn = reader.GetString(7)
               };
               leakSensorDataList.Add(data);
             }
@@ -233,11 +238,11 @@ namespace HDFS_Plugin
                 DataRawId = reader.GetInt32(0),
                 DCreated = reader.GetString(1),
                 DReported = reader.GetString(2),
-                DLifeTimeUseCount = reader.GetInt32(3),
+                DLifeTimeUseCount = reader.GetString(3),
                 LeakLevelId = reader.GetInt32(4),
                 SensorId = reader.GetInt32(5),
-                DTemperatureOut = reader.GetFloat(6),
-                DTemperatureIn = reader.GetFloat(7)
+                DTemperatureOut = reader.GetString(6),
+                DTemperatureIn = reader.GetString(7)
               };
             }
           }
@@ -263,6 +268,8 @@ namespace HDFS_Plugin
 
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
         await OdbcConnection.OpenAsync();
         using (var command = new OdbcCommand(selectQuery, OdbcConnection))
         using (var reader = await command.ExecuteReaderAsync())
@@ -276,13 +283,15 @@ namespace HDFS_Plugin
               DReported = reader.GetString(2),
               SensorId = reader.GetInt32(3),
               DShowerState = reader.GetString(4),
-              DTemperature = reader.GetFloat(5),
-              DHumidity = reader.GetInt32(6),
-              DBattery = reader.GetInt32(7)
+              DTemperature = reader.GetString(5),
+              DHumidity = reader.GetString(6),
+              DBattery = reader.GetString(7)
             };
             showerSensorDataList.Add(data);
           }
         }
+        stopwatch.Stop();
+        System.Console.WriteLine($"Joo joo det tog sådan ca: {stopwatch.ElapsedMilliseconds} ms at hente {showerSensorDataList.Count} ting bum bum");
       }
       catch (Exception e)
       {
@@ -317,9 +326,9 @@ namespace HDFS_Plugin
                 DReported = reader.GetString(2),
                 SensorId = reader.GetInt32(3),
                 DShowerState = reader.GetString(4),
-                DTemperature = reader.GetFloat(5),
-                DHumidity = reader.GetInt32(6),
-                DBattery = reader.GetInt32(7)
+                DTemperature = reader.GetString(5),
+                DHumidity = reader.GetString(6),
+                DBattery = reader.GetString(7)
               };
               showerSensorDataList.Add(data);
             }
@@ -359,9 +368,9 @@ namespace HDFS_Plugin
                 DReported = reader.GetString(2),
                 SensorId = reader.GetInt32(3),
                 DShowerState = reader.GetString(4),
-                DTemperature = reader.GetFloat(5),
-                DHumidity = reader.GetInt32(6),
-                DBattery = reader.GetInt32(7)
+                DTemperature = reader.GetString(5),
+                DHumidity = reader.GetString(6),
+                DBattery = reader.GetString(7)
               };
             }
           }

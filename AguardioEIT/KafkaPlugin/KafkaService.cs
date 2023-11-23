@@ -141,62 +141,86 @@ public class KafkaService : IKafkaPluginService
 
     private async Task SaveShowerData(List<Shower> results)
     {
-        Console.WriteLine("SaveShowerData Called");
-        var showerData = results.Select(s => new ShowerSensorDataSimple()
+        try
         {
-            DataRawId = int.Parse(s.DataRawId),
-            //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-            DCreated = s.DCreated,
-            //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-            DReported = s.DReported,
-            SensorId = int.Parse(s.SensorId),
-            //DShowerState = int.Parse(s.DShowerState),
-            DShowerState = s.DShowerState,
-            DTemperature = float.Parse(s.DTemperature),
-            DHumidity = int.Parse(s.DHumidity),
-            DBattery = int.Parse(s.DBattery)
-        }).ToList();
-        
-        if (showerData.Any())
-        {
-            Console.WriteLine("Data saved");
-            Console.WriteLine(results.FirstOrDefault());
-            Console.WriteLine(showerData.FirstOrDefault());
-            await _hdfs.InsertShowerSensorDataAsync(showerData);
+            Console.WriteLine("SaveShowerData Called");
+            var data = new List<ShowerSensorDataSimple>();
+            foreach (var s in results)
+            {
+                var point = new ShowerSensorDataSimple()
+                {
+                    DataRawId = int.Parse(s.DataRawId),
+                    //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                    DCreated = s.DCreated,
+                    //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                    DReported = s.DReported,
+                    SensorId = int.Parse(s.SensorId),
+                    //DShowerState = int.Parse(s.DShowerState),
+                    DShowerState = s.DShowerState,
+                    DTemperature = s.DTemperature,
+                    DHumidity = s.DHumidity,
+                    DBattery = s.DBattery
+                };
+                data.Add(point);
+            }
+
+            if (data.Any())
+            {
+                Console.WriteLine("Data saved");
+                await _hdfs.InsertShowerSensorDataAsync(data);
+            }
+            else
+            {
+                Console.WriteLine("Data not saved");
+            }
         }
-        else
+        catch (Exception e)
         {
-            Console.WriteLine("Data not saved");
+            Console.WriteLine("Fail!");
+            Console.WriteLine(e);
+            throw;
         }
     }
 
     private async Task SaveLeakData(List<Leak> results)
     {
-        Console.WriteLine("SaveLeakData Called");
-        var leakData = results.Select(l => new LeakSensorDataSimple()
+        try
         {
-            DataRawId = int.Parse(l.DataRaw_id),
-            //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
-            DCreated = l.DCreated,
-            //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
-            DReported = l.DReported,
-            DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
-            LeakLevelId = int.Parse(l.LeakLevel_id),
-            SensorId = int.Parse(l.Sensor_id),
-            DTemperatureOut = float.Parse(l.DTemperatureOut),
-            DTemperatureIn = float.Parse(l.DTemperatureIn)
-        }).ToList();
+            Console.WriteLine("SaveLeakData Called");
+            var data = new List<LeakSensorDataSimple>();
+            foreach (var l in results)
+            {
+                var point = new LeakSensorDataSimple()
+                {
+                    DataRawId = int.Parse(l.DataRaw_id),
+                    //DCreated = DateTime.ParseExact(l.DCreated, DateFormat, null),
+                    DCreated = l.DCreated,
+                    //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
+                    DReported = l.DReported,
+                    DLifeTimeUseCount = l.DLifeTimeUseCount,
+                    LeakLevelId = int.Parse(l.LeakLevel_id),
+                    SensorId = int.Parse(l.Sensor_id),
+                    DTemperatureOut = l.DTemperatureOut,
+                    DTemperatureIn = l.DTemperatureIn
+                };
+                data.Add(point);
+            }
 
-        if (leakData.Any())
-        {
-            Console.WriteLine("Data saved");
-            Console.WriteLine(results.FirstOrDefault());
-            Console.WriteLine(leakData.FirstOrDefault());
-            await _hdfs.InsertLeakSensorDataAsync(leakData);
+            if (data.Any())
+            {
+                Console.WriteLine("Data saved");
+                await _hdfs.InsertLeakSensorDataAsync(data);
+            }
+            else
+            {
+                Console.WriteLine("Data not saved");
+            }
         }
-        else
+        catch (Exception e)
         {
-            Console.WriteLine("Data not saved");
+            Console.WriteLine("Fail!");
+            Console.WriteLine(e);
+            throw;
         }
     }
 
