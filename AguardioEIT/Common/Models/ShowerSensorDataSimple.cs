@@ -12,7 +12,7 @@ public class ShowerSensorDataSimple
     public string DReported { get; set; }
     public int SensorId { get; set; }
     public string DShowerState { get; set; }
-    public float DTemperature { get; set; }
-    public int DHumidity { get; set; }
-    public int DBattery { get; set; }
+    public string DTemperature { get; set; }
+    public string DHumidity { get; set; }
+    public string DBattery { get; set; }
 }

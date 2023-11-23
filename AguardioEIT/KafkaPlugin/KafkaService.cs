@@ -157,9 +157,9 @@ public class KafkaService : IKafkaPluginService
                     SensorId = int.Parse(s.SensorId),
                     //DShowerState = int.Parse(s.DShowerState),
                     DShowerState = s.DShowerState,
-                    DTemperature = float.Parse(s.DTemperature),
-                    DHumidity = int.Parse(s.DHumidity),
-                    DBattery = int.Parse(s.DBattery)
+                    DTemperature = s.DTemperature,
+                    DHumidity = s.DHumidity,
+                    DBattery = s.DBattery
                 };
                 data.Add(point);
             }
@@ -197,11 +197,11 @@ public class KafkaService : IKafkaPluginService
                     DCreated = l.DCreated,
                     //DReported = DateTime.ParseExact(l.DReported, DateFormat, null),
                     DReported = l.DReported,
-                    DLifeTimeUseCount = int.Parse(l.DLifeTimeUseCount),
+                    DLifeTimeUseCount = l.DLifeTimeUseCount,
                     LeakLevelId = int.Parse(l.LeakLevel_id),
                     SensorId = int.Parse(l.Sensor_id),
-                    DTemperatureOut = float.Parse(l.DTemperatureOut),
-                    DTemperatureIn = float.Parse(l.DTemperatureIn)
+                    DTemperatureOut = l.DTemperatureOut,
+                    DTemperatureIn = l.DTemperatureIn
                 };
                 data.Add(point);
             }
