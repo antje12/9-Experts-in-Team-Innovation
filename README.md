@@ -1,7 +1,7 @@
 # 9-Experts-in-Team-Innovation
 
 ## Overleaf Link
-[Experts in Teams Innovation - Aguardio Group 1](https://www.overleaf.com/project/654fcf977ff977ae7a506617)
+[Experts in Teams Innovation - Aguardio Group 1](https://www.overleaf.com/1212594727ghkdrwbpbrpj#0eb2ca)
 
 ## Applying PostgreSQL Migrations
 The easiest way to apply the migrations is to start docker-compose by using one of the
