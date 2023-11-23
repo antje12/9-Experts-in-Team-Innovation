@@ -62,7 +62,7 @@ public class SensorDataRepository : ISensorDataRepository
         return stopwatch.ElapsedMilliseconds;
     }
 
-    public async Task<QueryResponse<SensorData>> GetByDataIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetByDataIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
     {
         Stopwatch sw = new();
         
@@ -74,11 +74,12 @@ public class SensorDataRepository : ISensorDataRepository
             _ => throw new ArgumentException("Invalid sensor type.")
         };
         sw.Stop();
-
-        if (data is null) throw new KeyNotFoundException($"Data with the id {dataId} was not found.");
         
-        List<SensorData> sensorDataList = new() { data };
-        return new QueryResponse<SensorData>
+        if (data is null) throw new KeyNotFoundException($"Data with the id {dataId} was not found.");
+        T convertedData = (T)data;
+        
+        List<T> sensorDataList = new() { convertedData };
+        return new QueryResponse<T>
         {
             Data = sensorDataList,
             FetchedItems = sensorDataList.Count,
@@ -87,7 +88,7 @@ public class SensorDataRepository : ISensorDataRepository
         };
     }
 
-    public async Task<QueryResponse<SensorData>> GetBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
     {
         Stopwatch sw = new();
         
@@ -100,8 +101,10 @@ public class SensorDataRepository : ISensorDataRepository
         };
         sw.Stop();
 
-        List<SensorData> sensorDataList = data.ToList();
-        return new QueryResponse<SensorData>
+        IEnumerable<T> sensorDataEnumerable = data.ToList().Cast<T>();
+        List<T> sensorDataList = sensorDataEnumerable.ToList();
+
+        return new QueryResponse<T>
         {
             Data = sensorDataList,
             FetchedItems = sensorDataList.Count,

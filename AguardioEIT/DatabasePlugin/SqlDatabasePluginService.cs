@@ -33,7 +33,7 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
             }
             
             string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
-            QueryResponse<SensorData> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
+            QueryResponse<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
             await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection.Data));
 
             return insertTime;
@@ -44,12 +44,12 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
         }
     }
 
-    public async Task<QueryResponse<SensorData>> GetSensorDataByIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetSensorDataByIdAsync<T>(int dataId, SensorType sensorType) where T : SensorData
     {
         return await _sensorDataRepository.GetByDataIdAsync<T>(dataId, sensorType);
     }
 
-    public async Task<QueryResponse<SensorData>> GetSensorDataBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
+    public async Task<QueryResponse<T>> GetSensorDataBySensorIdAsync<T>(int sensorId, SensorType sensorType) where T : SensorData
     {
         return await _sensorDataRepository.GetBySensorIdAsync<T>(sensorId, sensorType);
     }
