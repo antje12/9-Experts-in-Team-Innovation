@@ -5,6 +5,7 @@ using System.Data.Odbc;
 using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
+using api.Logging;
 using Common.Models;
 using Interfaces;
 
@@ -12,7 +13,7 @@ namespace HDFS_Plugin
 {
   public class HDFS_Service : IHDFS_Service
   {
-    private readonly string connectionString = "Driver=Hive;Host=192.168.8.13;Port=10000;HiveServerType=2;";
+    private readonly string connectionString = "Driver=Hive;Host=192.168.8.12;Port=10000;HiveServerType=2;";
 
     public HDFS_Service()
     {
@@ -96,6 +97,7 @@ namespace HDFS_Plugin
       stopwatch.Start();
       await ExecuteQueryAsync(insertCommandText.ToString());
       stopwatch.Stop();
+      await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
       System.Console.WriteLine($"Inset List of leakdata: {data.Count} elements {stopwatch.ElapsedMilliseconds} ");
     }
 
@@ -122,6 +124,7 @@ namespace HDFS_Plugin
       stopwatch.Start();
       await ExecuteQueryAsync(insertCommandText.ToString());
       stopwatch.Stop();
+      await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
       System.Console.WriteLine($"Inset List of leakdata: {data.Count} elements {stopwatch.ElapsedMilliseconds} ");
     }
 
@@ -155,6 +158,7 @@ namespace HDFS_Plugin
           leakSensorDataList.Add(data);
         }
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Joo joo det tog sådan ca: {stopwatch.ElapsedMilliseconds} ms at hente {leakSensorDataList.Count} ting bum bum");
       }
       catch (Exception e)
@@ -195,6 +199,7 @@ namespace HDFS_Plugin
           leakSensorDataList.Add(data);
         }
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Fetched LeakSensorDataBySensorId: {leakSensorDataList.Count} elements {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
@@ -235,6 +240,7 @@ namespace HDFS_Plugin
           };
         }
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Fetch single leakDataByDataId: {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
@@ -276,6 +282,7 @@ namespace HDFS_Plugin
           showerSensorDataList.Add(data);
         }
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Fetch ShowerSensorData elements: {showerSensorDataList.Count} time: {stopwatch.ElapsedMilliseconds}");
       }
       catch (Exception e)
@@ -317,6 +324,7 @@ namespace HDFS_Plugin
           showerSensorDataList.Add(data);
         }
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Fetch ShowerSensorDataBySensorId: {showerSensorDataList.Count} elements {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
@@ -359,6 +367,7 @@ namespace HDFS_Plugin
         }
 
         stopwatch.Stop();
+        await ExperimentLogger.LogAsync(stopwatch.ElapsedMilliseconds);
         System.Console.WriteLine($"Fetch showerSensorDataByDataId {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
