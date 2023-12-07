@@ -22,8 +22,6 @@ services:
       - mongo.vol:/data/db
     restart: unless-stopped
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
-    ports:
-      - "27017:27017"
       
   redis-server:
     image: redis
@@ -45,23 +43,15 @@ services:
       - mongo.db
     environment:
       - DOCKERIZED=true
-  
-  leak-sensor:
-    container_name: leak-sensor
-    build: ./kafkaProducer/leak_sensor
-    restart: unless-stopped
-    depends_on:
-      - schema-registry
-
-  shower-sensor:
-    container_name: shower-sensor
-    build: ./kafkaProducer/shower_sensor
-    restart: unless-stopped
-    depends_on:
-      - schema-registry
+    volumes:
+      - type: bind
+        source: logs
+        target: /logs
+      
  
 volumes:
   mongo.vol:
     name: "mongo.vol"
   datanode:
     name: datanode
+  logs:
