@@ -25,15 +25,16 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka-1:9092,EXTERNAL://localhost:19092"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://10.126.53.176:9092,EXTERNAL://host.docker.internal:19092"
     restart: unless-stopped
     depends_on:
       - zookeeper
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    restart: unless-stopped
     volumes:
-      - datanode1:/hadoop/dfs/data
+      - datanode:/hadoop/dfs/data
     env_file:
       - ./hadoop-hive.env
     environment:
@@ -43,6 +44,7 @@ services:
 
   postgres:
     image: postgres:13
+    restart: unless-stopped
     environment:
       POSTGRES_DB: aguardio
       POSTGRES_USER: postgres
@@ -57,7 +59,7 @@ services:
     image: mongo:latest
     volumes:
       - mongo.vol:/data/db
-    restart: always
+    restart: unless-stopped
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
 
 volumes:
