@@ -64,7 +64,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<LeakSensorData> queryResponse =
           await _sqlDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId, SensorType.LeakSensor);
 
-      System.Console.WriteLine($"SqlGetLeakDataByDataId: {queryResponse.QueryTimeMs}ms");
+      System.Console.WriteLine($"SqlGetLeakDataByDataId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
 
       // return Ok(queryResponse);
       return Ok();
@@ -83,7 +83,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<ShowerSensorData> queryResponse =
           await _sqlDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId, SensorType.ShowerSensor);
 
-      Console.WriteLine($"SqlGetShowerDataByDataId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"SqlGetShowerDataByDataId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -101,7 +101,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<LeakSensorData> queryResponse =
           await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId, SensorType.LeakSensor);
 
-      Console.WriteLine($"SqlGetLeakDataBySensorId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"SqlGetLeakDataBySensorId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -119,7 +119,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<ShowerSensorData> queryResponse =
           await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId, SensorType.ShowerSensor);
 
-      Console.WriteLine($"SqlGetShowerDataBySensorId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"SqlGetShowerDataBySensorId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -172,7 +172,7 @@ public class DatabaseController : ControllerBase
     {
       QueryResponse<LeakSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId);
 
-      Console.WriteLine($"MongoDbGetLeakDataByDataId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"MongoDbGetLeakDataByDataId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -189,7 +189,7 @@ public class DatabaseController : ControllerBase
     {
       QueryResponse<ShowerSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId);
 
-      Console.WriteLine($"MongoDbGetShowerDataByDataId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"MongoDbGetShowerDataByDataId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -207,7 +207,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<LeakSensorData> queryResponse =
           await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId);
 
-      Console.WriteLine($"MongoDbGetLeakDataBySensorId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"MongoDbGetLeakDataBySensorId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }
@@ -225,7 +225,7 @@ public class DatabaseController : ControllerBase
       QueryResponse<ShowerSensorData> queryResponse =
           await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId);
 
-      Console.WriteLine($"MongoDbGetShowerDataBySensorId: {queryResponse.QueryTimeMs}ms");
+      Console.WriteLine($"MongoDbGetShowerDataBySensorId: Elements: {queryResponse.FetchedItems} {queryResponse.QueryTimeMs}ms");
       // return Ok(queryResponse);
       return Ok();
     }

@@ -26,15 +26,15 @@ public sealed class SqlDatabasePluginService : ISqlDatabasePluginService
             IEnumerable<T> sensorData = data.ToList();
             long insertTime = await _sensorDataRepository.AddDataAsync(sensorData, sensorType);
             
-            foreach (T d in sensorData)
-            {
-                string cacheKeyDataId = $"SqlDb:{typeof(T).Name}:DataId={d.DataRawId}";
-                await _redisPluginService.SetAsync(cacheKeyDataId, JsonConvert.SerializeObject(data));
-            }
-            
-            string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
-            QueryResponse<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
-            await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection.Data));
+            // foreach (T d in sensorData)
+            // {
+            //     string cacheKeyDataId = $"SqlDb:{typeof(T).Name}:DataId={d.DataRawId}";
+            //     await _redisPluginService.SetAsync(cacheKeyDataId, JsonConvert.SerializeObject(data));
+            // }
+            //
+            // string cacheKeySensorId = $"SqlDb:{typeof(T).Name}:SensorId={sensorData.First().SensorId}";
+            // QueryResponse<T> sensorDataCollection = await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId, sensorType);
+            // await _redisPluginService.SetAsync(cacheKeySensorId, JsonConvert.SerializeObject(sensorDataCollection.Data));
 
             return insertTime;
         } catch (Exception e)

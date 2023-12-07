@@ -29,13 +29,13 @@ public sealed class MongoDatabasePluginService : IMongoDatabasePluginService
         await collection.InsertManyAsync(sensorData);
         stopwatch.Stop();
         
-        foreach (T d in sensorData)
-        {
-            await _redisPluginService.SetAsync($"MongoDb:{typeof(T).Name}:DataId={d.DataRawId}", JsonConvert.SerializeObject(data));
-        }
-
-        IEnumerable<T>? sensorDataCollectionResponse = (await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId)).Data;
-        await _redisPluginService.SetAsync($"MongoDb:SensorId={sensorData.First().SensorId}", JsonConvert.SerializeObject(sensorDataCollectionResponse));
+        // foreach (T d in sensorData)
+        // {
+        //     await _redisPluginService.SetAsync($"MongoDb:{typeof(T).Name}:DataId={d.DataRawId}", JsonConvert.SerializeObject(data));
+        // }
+        //
+        // IEnumerable<T>? sensorDataCollectionResponse = (await GetSensorDataBySensorIdAsync<T>(sensorData.First().SensorId)).Data;
+        // await _redisPluginService.SetAsync($"MongoDb:SensorId={sensorData.First().SensorId}", JsonConvert.SerializeObject(sensorDataCollectionResponse));
 
         return stopwatch.ElapsedMilliseconds;
     }
