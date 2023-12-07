@@ -92,8 +92,11 @@ namespace HDFS_Plugin
       }
       insertCommandText.Append(string.Join(",", insertValues));
       insertCommandText.Append(";");
-
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
       await ExecuteQueryAsync(insertCommandText.ToString());
+      stopwatch.Stop();
+      System.Console.WriteLine($"Inset List of leakdata: {data.Count} elements {stopwatch.ElapsedMilliseconds} ");
     }
 
     public async Task InsertShowerSensorDataAsync(ShowerSensorDataSimple data)
@@ -115,7 +118,11 @@ namespace HDFS_Plugin
       insertCommandText.Append(string.Join(",", insertValues));
       insertCommandText.Append(";");
 
+      var stopwatch = new Stopwatch();
+      stopwatch.Start();
       await ExecuteQueryAsync(insertCommandText.ToString());
+      stopwatch.Stop();
+      System.Console.WriteLine($"Inset List of leakdata: {data.Count} elements {stopwatch.ElapsedMilliseconds} ");
     }
 
     public async Task<List<LeakSensorDataSimple>> LoadAllLeakSensorDataAsync()
@@ -165,6 +172,9 @@ namespace HDFS_Plugin
 
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         using var connection = new OdbcConnection(connectionString);
         await connection.OpenAsync();
         using var command = new OdbcCommand(selectQuery, connection);
@@ -184,6 +194,8 @@ namespace HDFS_Plugin
           };
           leakSensorDataList.Add(data);
         }
+        stopwatch.Stop();
+        System.Console.WriteLine($"Fetched LeakSensorDataBySensorId: {leakSensorDataList.Count} elements {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
       {
@@ -200,6 +212,10 @@ namespace HDFS_Plugin
 
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+
         using var connection = new OdbcConnection(connectionString);
         await connection.OpenAsync();
         using var command = new OdbcCommand(selectQuery, connection);
@@ -218,6 +234,8 @@ namespace HDFS_Plugin
             DTemperatureIn = reader.GetString(7)
           };
         }
+        stopwatch.Stop();
+        System.Console.WriteLine($"Fetch single leakDataByDataId: {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
       {
@@ -258,7 +276,7 @@ namespace HDFS_Plugin
           showerSensorDataList.Add(data);
         }
         stopwatch.Stop();
-        System.Console.WriteLine($"Joo joo det tog sådan ca: {stopwatch.ElapsedMilliseconds} ms at hente {showerSensorDataList.Count} ting bum bum");
+        System.Console.WriteLine($"Fetch ShowerSensorData elements: {showerSensorDataList.Count} time: {stopwatch.ElapsedMilliseconds}");
       }
       catch (Exception e)
       {
@@ -275,6 +293,10 @@ namespace HDFS_Plugin
 
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+
         using var connection = new OdbcConnection(connectionString);
         await connection.OpenAsync();
         using var command = new OdbcCommand(selectQuery, connection);
@@ -294,6 +316,8 @@ namespace HDFS_Plugin
           };
           showerSensorDataList.Add(data);
         }
+        stopwatch.Stop();
+        System.Console.WriteLine($"Fetch ShowerSensorDataBySensorId: {showerSensorDataList.Count} elements {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
       {
@@ -309,6 +333,10 @@ namespace HDFS_Plugin
       string selectQuery = $"SELECT datarawid, dcreated, dreported, sensorid, dshowerstate, dtemperature, dhumidity, dbattery FROM shower_sensor_data WHERE datarawid = {dataRawId};";
       try
       {
+        var stopwatch = new Stopwatch();
+        stopwatch.Start();
+
+
         using (var connection = new OdbcConnection(connectionString))
         {
           await connection.OpenAsync();
@@ -329,6 +357,9 @@ namespace HDFS_Plugin
             };
           }
         }
+
+        stopwatch.Stop();
+        System.Console.WriteLine($"Fetch showerSensorDataByDataId {stopwatch.ElapsedMilliseconds} ");
       }
       catch (Exception e)
       {

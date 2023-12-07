@@ -47,12 +47,9 @@ namespace HDFS_Plugin
     public async Task<IActionResult> InsertLeakSensorDataBulk(int count)
     {
       var data = new List<LeakSensorDataSimple>();
-      Random rnd = new Random();
-      var sensorId = 1;
 
       for (int i = 0; i < count; i++)
       {
-        if ((i != 0) && (i % 10 == 0)) sensorId++;
         var dummyLeakData = new LeakSensorDataSimple
         {
           DataRawId = i + 1,
@@ -60,19 +57,14 @@ namespace HDFS_Plugin
           DReported = "2023-11-04",
           DLifeTimeUseCount = "randomInt",
           LeakLevelId = 2,
-          SensorId = sensorId,
+          SensorId = 1,
           DTemperatureOut = "25.5f",
           DTemperatureIn = "22.3f"
         };
         data.Add(dummyLeakData);
       }
-
-      Stopwatch stopwatch = new();
-      stopwatch.Start();
-
       await _hdfsService.InsertLeakSensorDataAsync(data);
-      stopwatch.Stop();
-      return Ok($"{count} rows of Leak sensor data inserted successfully {stopwatch.ElapsedMilliseconds}.");
+      return Ok();
     }
 
     [HttpGet("LeakSensorData/GetAll")]
@@ -148,16 +140,14 @@ namespace HDFS_Plugin
     public async Task<IActionResult> InsertShowerSensorDataBulk(int count)
     {
       var data = new List<ShowerSensorDataSimple>();
-      var sensorId = 1;
       for (int i = 0; i < count; i++)
       {
-        if ((i != 0) && (i % 10 == 0)) sensorId++;
         var dummyLeakData = new ShowerSensorDataSimple
         {
           DataRawId = i + 1,
           DCreated = "2023-11-04",
           DReported = "2023-11-04",
-          SensorId = sensorId,
+          SensorId = 1,
           DShowerState = "On",
           DTemperature = "35.5f",
           DHumidity = "80",
@@ -166,11 +156,8 @@ namespace HDFS_Plugin
         data.Add(dummyLeakData);
       }
 
-      Stopwatch stopwatch = new();
-      stopwatch.Start();
       await _hdfsService.InsertShowerSensorDataAsync(data);
-      stopwatch.Stop();
-      return Ok($"{count} rows of Shower sensor data inserted successfully {stopwatch.ElapsedMilliseconds}.");
+      return Ok();
     }
 
     [HttpGet("ShowerSensorData/GetAll")]
