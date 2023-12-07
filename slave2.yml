@@ -23,7 +23,7 @@ services:
     volumes:
       - postgres_sensor_data:/var/lib/postgresql/data
     ports:
-      - 5444:5432
+      - 5432:5432
   
   mongo.db:
     container_name: mongo.db
