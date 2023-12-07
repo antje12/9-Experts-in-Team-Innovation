@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HDFS_Plugin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f5a18a96ffa7b36b078bc85a447c7e4e74a310d6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("HDFS_Plugin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HDFS_Plugin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

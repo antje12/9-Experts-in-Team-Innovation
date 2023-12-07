@@ -20,9 +20,9 @@ public class KafkaService : IKafkaPluginService
   private readonly SchemaRegistryConfig _schemaRegistryConfig;
   private readonly AvroSerializerConfig _avroSerializerConfig;
 
-  private const string KafkaServers = "kafka-1:9092,kafka-2:9092,kafka-3:9092";
+  private const string KafkaServers = "192.168.8.13:9092,192.168.8.12:9092,192.168.8.10:9092";
   private const string GroupId = "KafkaPlugin";
-  private const string SchemaRegistry = "http://schema-registry:8081";
+  private const string SchemaRegistry = "http://192.168.8.13:8081";
   private const int BatchSize = 100;
 
   public KafkaService(
