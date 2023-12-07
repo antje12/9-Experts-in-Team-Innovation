@@ -32,6 +32,7 @@ services:
 
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
+    restart: unless-stopped
     volumes:
       - namenode:/hadoop/dfs/name
     environment:
@@ -43,6 +44,7 @@ services:
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    restart: unless-stopped
     volumes:
       - datanode:/hadoop/dfs/data
     env_file:
@@ -54,6 +56,7 @@ services:
 
   hive-server:
     image: bde2020/hive:2.3.2-postgresql-metastore
+    restart: unless-stopped
     env_file:
       - ./hadoop-hive.env
     environment:
@@ -64,6 +67,7 @@ services:
 
   hive-metastore:
     image: bde2020/hive:2.3.2-postgresql-metastore
+    restart: unless-stopped
     env_file:
       - ./hadoop-hive.env
     command: /opt/hive/bin/hive --service metastore
@@ -74,6 +78,7 @@ services:
 
   hive-metastore-postgresql:
     image: bde2020/hive-metastore-postgresql:2.3.0
+    restart: unless-stopped
     volumes:
       - postgres_metastore_hive:/var/lib/postgresql/data
 
@@ -82,7 +87,7 @@ services:
     image: mongo:latest
     volumes:
       - mongo.vol:/data/db
-    restart: always
+    restart: unless-stopped
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
  
 volumes:
