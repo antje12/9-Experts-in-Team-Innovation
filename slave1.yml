@@ -9,7 +9,7 @@ services:
     environment:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_SERVERS: 10.94.125.168:2888:3888;10.126.64.35:2888:3888;10.126.53.176:2888:3888
+      ZOOKEEPER_SERVERS: 192.168.8.13:2888:3888;192.168.8.12:2888:3888;192.168.8.10:2888:3888
 
   kafka:
     container_name: kafka
@@ -20,12 +20,12 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: 10.94.125.168:2181,10.126.64.35:2181,10.126.53.176:2181
+      KAFKA_ZOOKEEPER_CONNECT: 192.168.8.13:2181,192.168.8.12:2181,192.168.8.10:2181
       KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
       KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
       KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://10.126.64.35:9092,EXTERNAL://host.docker.internal:19092"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://192.168.8.12:9092,EXTERNAL://host.docker.internal:19092"
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -50,7 +50,7 @@ services:
     env_file:
       - ./hadoop-hive.env
     environment:
-      SERVICE_PRECONDITION: "10.126.64.35:50070"
+      SERVICE_PRECONDITION: "192.168.8.12:50070"
     ports:
       - "50075:50075"
 
@@ -61,7 +61,7 @@ services:
       - ./hadoop-hive.env
     environment:
       HIVE_CORE_CONF_javax_jdo_option_ConnectionURL: "jdbc:postgresql://hive-metastore/metastore"
-      SERVICE_PRECONDITION: "10.126.64.35:9083"
+      SERVICE_PRECONDITION: "192.168.8.12:9083"
     ports:
       - "10000:10000"
 
@@ -72,7 +72,7 @@ services:
       - ./hadoop-hive.env
     command: /opt/hive/bin/hive --service metastore
     environment:
-      SERVICE_PRECONDITION: "10.126.64.35:50070 10.126.64.35:50075 10.126.64.35:5432"
+      SERVICE_PRECONDITION: "192.168.8.12:50070 192.168.8.12:50075 192.168.8.12:5432"
     ports:
       - "9083:9083"
 
