@@ -7,7 +7,7 @@ services:
     volumes:
       - datanode:/hadoop/dfs/data
     env_file:
-      - ./hadoop-hive.env
+      - ./hadoop.env
     environment:
       SERVICE_PRECONDITION: "192.168.8.12:50070"
     ports:
