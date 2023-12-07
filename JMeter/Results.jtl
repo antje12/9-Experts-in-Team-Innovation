@@ -1,2 +1,2 @@
 timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1701971079913,28,Insert data,200,OK,SQL Write 1-1,,true,,92,443,1,1,http://192.168.8.13:8082/Database/sql/leak-sensor/add?repeat=1,28,0,4
+1701971907367,1242,Query data,200,OK,HDFS Read 1-1,,true,,92,163,1,1,http://192.168.8.13:8082/HDFS/ShowerSensorData/GetAll,1242,0,4

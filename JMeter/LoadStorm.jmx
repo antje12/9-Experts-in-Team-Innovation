@@ -84,7 +84,7 @@
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/Kafka/Version</stringProp>
+          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/HDFS/ShowerSensorData/GetAll</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -196,7 +196,7 @@
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/Kafka/Version</stringProp>
+          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/Database/mongodb/leak-sensor/getByDataId?dataId=0</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -308,7 +308,7 @@
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
           <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
-          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/Kafka/Version</stringProp>
+          <stringProp name="HTTPSampler.path">http://192.168.8.13:8082/Database/sql/leak-sensor/getBySensorId?sensorId=0</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
