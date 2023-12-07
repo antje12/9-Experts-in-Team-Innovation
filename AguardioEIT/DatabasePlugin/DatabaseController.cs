@@ -30,7 +30,8 @@ public class DatabaseController : ControllerBase
       IEnumerable<LeakSensorData> leakSensorData = GenerateLeakSensorData(repeat, data);
       long insertTime = await _sqlDatabasePluginService.SaveSensorDataAsync(leakSensorData, SensorType.LeakSensor);
       System.Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {insertTime}ms");
-      return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      // return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      return Ok();
     }
     catch (Exception e)
     {
@@ -46,7 +47,8 @@ public class DatabaseController : ControllerBase
       IEnumerable<ShowerSensorData> showerSensorData = GenerateShowerSensorData(repeat, data);
       long insertTime = await _sqlDatabasePluginService.SaveSensorDataAsync(showerSensorData, SensorType.ShowerSensor);
       System.Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {insertTime}ms");
-      return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      // return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      return Ok();
     }
     catch (Exception e)
     {
@@ -64,7 +66,8 @@ public class DatabaseController : ControllerBase
 
       System.Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
 
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -81,7 +84,8 @@ public class DatabaseController : ControllerBase
           await _sqlDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId, SensorType.ShowerSensor);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -98,7 +102,8 @@ public class DatabaseController : ControllerBase
           await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId, SensorType.LeakSensor);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -115,7 +120,8 @@ public class DatabaseController : ControllerBase
           await _sqlDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId, SensorType.ShowerSensor);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -132,7 +138,8 @@ public class DatabaseController : ControllerBase
       long insertTime = await _mongoDatabasePluginService.SaveSensorDataAsync(leakSensorData);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {insertTime}ms");
-      return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      // return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      return Ok();
     }
     catch (Exception e)
     {
@@ -149,7 +156,8 @@ public class DatabaseController : ControllerBase
       long insertTime = await _mongoDatabasePluginService.SaveSensorDataAsync(showerSensorData);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {insertTime}ms");
-      return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      // return Ok(new InsertResponse { InsertTimeMS = insertTime });
+      return Ok();
     }
     catch (Exception e)
     {
@@ -165,7 +173,8 @@ public class DatabaseController : ControllerBase
       QueryResponse<LeakSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<LeakSensorData>(dataId);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -181,7 +190,8 @@ public class DatabaseController : ControllerBase
       QueryResponse<ShowerSensorData> queryResponse = await _mongoDatabasePluginService.GetSensorDataByIdAsync<ShowerSensorData>(dataId);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -198,7 +208,8 @@ public class DatabaseController : ControllerBase
           await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<LeakSensorData>(sensorId);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {
@@ -215,7 +226,8 @@ public class DatabaseController : ControllerBase
           await _mongoDatabasePluginService.GetSensorDataBySensorIdAsync<ShowerSensorData>(sensorId);
 
       Console.WriteLine($"{System.Reflection.MethodBase.GetCurrentMethod().Name}: {queryResponse.QueryTimeMs}ms");
-      return Ok(queryResponse);
+      // return Ok(queryResponse);
+      return Ok();
     }
     catch (Exception e)
     {

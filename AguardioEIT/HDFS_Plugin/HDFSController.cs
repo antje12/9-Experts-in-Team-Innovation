@@ -71,7 +71,7 @@ namespace HDFS_Plugin
     public async Task<IActionResult> LoadLeakSensorData()
     {
       var data = await _hdfsService.LoadAllLeakSensorDataAsync();
-      return Ok(data);
+      return Ok();
     }
 
     [HttpGet("LeakSensorData/GetBySensorId/{sensorId}")]
@@ -82,7 +82,7 @@ namespace HDFS_Plugin
         var data = await _hdfsService.LoadLeakSensorDataBySensorIdAsync(sensorId);
         if (data != null && data.Count > 0)
         {
-          return Ok(data);
+          return Ok();
         }
         else
         {
@@ -103,7 +103,7 @@ namespace HDFS_Plugin
         var data = await _hdfsService.LoadLeakSensorDataByDataRawIdAsync(dataRawId);
         if (data != null)
         {
-          return Ok(data);
+          return Ok();
         }
         else
         {
@@ -164,7 +164,7 @@ namespace HDFS_Plugin
     public async Task<IActionResult> LoadShowerSensorData()
     {
       var data = await _hdfsService.LoadAllShowerSensorDataAsync();
-      return Ok(data);
+      return Ok();
     }
 
     [HttpGet("ShowerSensorData/GetBySensorId/{sensorId}")]
@@ -175,7 +175,7 @@ namespace HDFS_Plugin
         var data = await _hdfsService.LoadShowerSensorDataBySensorIdAsync(sensorId);
         if (data != null && data.Count > 0)
         {
-          return Ok(data);
+          return Ok();
         }
         else
         {
@@ -197,7 +197,7 @@ namespace HDFS_Plugin
         var data = await _hdfsService.LoadShowerSensorDataByDataRawIdAsync(dataRawId);
         if (data != null)
         {
-          return Ok(data);
+          return Ok();
         }
         else
         {
