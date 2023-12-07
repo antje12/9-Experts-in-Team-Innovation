@@ -1,34 +1,5 @@
 version: "3"
 services:
-  zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:7.2.1
-    ports:
-      - 2181:2181
-    restart: unless-stopped
-    environment:
-      ZOOKEEPER_SERVER_ID: 1
-      ZOOKEEPER_CLIENT_PORT: 2181
-      ZOOKEEPER_SERVERS: 192.168.8.13:2888:3888;192.168.8.12:2888:3888;192.168.8.10:2888:3888
-
-  kafka:
-    container_name: kafka
-    image: confluentinc/cp-kafka:7.2.1
-    ports:
-      - 19092:19092
-      - 9092:9092
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_ZOOKEEPER_CONNECT: 192.168.8.13:2181,192.168.8.12:2181,192.168.8.10:2181
-      KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
-      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
-      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
-      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://192.168.8.12:9092,EXTERNAL://host.docker.internal:19092"
-    restart: unless-stopped
-    depends_on:
-      - zookeeper
 
   namenode:
     image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
@@ -41,6 +12,7 @@ services:
       - ./hadoop-hive.env
     ports:
       - "50070:50070"
+      - "8020:8020"
 
   datanode:
     image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
@@ -81,7 +53,9 @@ services:
     restart: unless-stopped
     volumes:
       - postgres_metastore_hive:/var/lib/postgresql/data
-
+    ports:
+      - "5432:5432"
+    
   mongo.db:
     container_name: mongo.db
     image: mongo:latest
@@ -89,7 +63,9 @@ services:
       - mongo.vol:/data/db
     restart: unless-stopped
     entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
- 
+    ports:
+      - "27017:27017"
+
 volumes:
   postgres_metastore_hive:
   mongo.vol:
