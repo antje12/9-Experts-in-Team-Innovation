@@ -1,0 +1,68 @@
+version: "3"
+services:
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.2.1
+    ports:
+      - 2181:2181
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SERVERS: 10.94.125.168:2888:3888;10.126.64.35:2888:3888;10.126.53.176:2888:3888
+
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.2.1
+    ports:
+      - 19092:19092
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_ZOOKEEPER_CONNECT: 10.94.125.168:2181,10.126.64.35:2181,10.126.53.176:2181
+      KAFKA_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.RoundRobinAssignor
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka-1:9092,EXTERNAL://localhost:19092"
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+
+  datanode:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    volumes:
+      - datanode1:/hadoop/dfs/data
+    env_file:
+      - ./hadoop-hive.env
+    environment:
+      SERVICE_PRECONDITION: "10.126.64.35:50070"
+    ports:
+      - "50075:50075"
+
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: aguardio
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_sensor_data:/var/lib/postgresql/data
+    ports:
+      - 5444:5432
+  
+  mongo.db:
+    container_name: mongo.db
+    image: mongo:latest
+    volumes:
+      - mongo.vol:/data/db
+    restart: always
+    entrypoint: [ "/usr/bin/mongod", "--bind_ip_all", "--replSet", "dbrs" ]
+
+volumes:
+  postgres_sensor_data:
+  mongo.vol:
+    name: "mongo.vol"
+  datanode:
+    name: datanode
