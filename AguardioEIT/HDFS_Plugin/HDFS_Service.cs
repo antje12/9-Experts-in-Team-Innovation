@@ -13,7 +13,7 @@ namespace HDFS_Plugin
 {
   public class HDFS_Service : IHDFS_Service
   {
-    private readonly string connectionString = "Driver=Hive;Host=192.168.8.12;Port=10000;HiveServerType=2;";
+    private readonly string connectionString = "Driver=Hive;Host=hive-server;Port=10000;HiveServerType=2;"; 
 
     public HDFS_Service()
     {
